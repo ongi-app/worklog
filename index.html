@@ -235,7 +235,7 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
     <button type="button" class="tabbtn active" data-maintab="list"><span class="tabbtn-emoji">📋</span><span class="tabbtn-txt">작업<br>목록</span></button>
     <button type="button" class="tabbtn" data-maintab="report"><span class="tabbtn-emoji">📝</span><span class="tabbtn-txt">작업<br>일보</span></button>
     <button type="button" class="tabbtn" data-maintab="attendance"><span class="tabbtn-emoji">👥</span><span class="tabbtn-txt">출역<br>일지</span></button>
-    <button type="button" class="tabbtn" data-maintab="export"><span class="tabbtn-emoji">📁</span><span class="tabbtn-txt">내보<br>내기</span></button>
+    <button type="button" class="tabbtn" id="tab-export-btn" data-maintab="export" hidden><span class="tabbtn-emoji">📁</span><span class="tabbtn-txt">내보<br>내기</span></button>
     <button type="button" class="tabbtn" id="tab-settings-btn" data-maintab="settings" hidden><span class="tabbtn-emoji">⚙</span><span class="tabbtn-txt">설정</span></button>
   </div>
 
@@ -299,6 +299,10 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
           <input type="text" id="rep-today-work" placeholder="오늘 진행한 작업 내용" style="flex:1;">
           <button type="button" class="btn btn-small btn-icon" id="btn-pull-prev-plan" title="어제 '내일 예정'을 여기로 불러오기">🔄</button>
         </div>
+        <div style="margin-top:6px;">
+          <button type="button" class="btn btn-small" id="btn-toggle-prev-log">📋 어제 작업일보 참고</button>
+        </div>
+        <div id="prev-log-preview" class="hint mono" style="margin-top:6px; white-space:pre-wrap; background:var(--panel2, transparent); border:1px solid var(--line); border-radius:6px; padding:8px;" hidden></div>
       </div>
 
       <div class="card compact-card">
@@ -427,7 +431,13 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
           <h3>📊 전체 공사 현황</h3>
           <div class="section-note">공사별 누계 공정률, 오늘 작성 여부, 승인 대기 건수를 한눈에 확인합니다.</div>
         </div>
+        <div id="dash-summary"></div>
         <div id="dash-list"></div>
+        <div class="card">
+          <h3>👥 팀원별 활동 현황</h3>
+          <div class="section-note">이번 달 작업일보 작성 건수와 최근 작성일을 확인합니다. 오래 입력이 없는 팀원을 챙길 때 참고하세요.</div>
+          <div class="tblwrap"><table class="gridtable"><thead><tr><th>이름</th><th>역할</th><th>이번달 작성</th><th>최근 작성일</th></tr></thead><tbody id="dash-team-tbody"></tbody></table></div>
+        </div>
       </div>
 
       <div id="stab-payroll" hidden>
@@ -483,9 +493,26 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
           <div class="formrow"><label>공사기간</label><input type="date" id="proj-start"><span style="min-width:auto;">~</span><input type="date" id="proj-end"></div>
           <button type="button" class="btn btn-primary btn-block" id="btn-add-project">공사 추가</button>
         </div>
-        <div class="card">
-          <h3>공사 목록</h3>
-          <div class="tblwrap"><table class="gridtable"><thead><tr><th>공사명</th><th>업체명</th><th>지역</th><th>기간</th><th>상태</th><th></th></tr></thead><tbody id="projects-tbody"></tbody></table></div>
+        <div class="tabbtn2bar" style="margin-top:6px;">
+          <button type="button" class="tabbtn2 active" data-projstab="active">진행 중 공사</button>
+          <button type="button" class="tabbtn2" data-projstab="done">완료된 공사</button>
+        </div>
+
+        <div id="projstab-active">
+          <div class="card">
+            <h3>진행 중인 공사</h3>
+            <div class="tblwrap"><table class="gridtable"><thead><tr><th>공사명</th><th>업체명</th><th>지역</th><th>기간</th><th>상태</th><th></th></tr></thead><tbody id="projects-active-tbody"></tbody></table></div>
+          </div>
+        </div>
+
+        <div id="projstab-done" hidden>
+          <div class="card">
+            <h3>완료된 공사 (포트폴리오)</h3>
+            <div class="section-note" id="done-projects-summary"></div>
+            <div class="formrow"><label>검색</label><input type="text" id="done-project-search" placeholder="공사명으로 검색" style="flex:1;"></div>
+            <div class="tblwrap"><table class="gridtable"><thead><tr><th>공사명</th><th>업체명</th><th>지역</th><th>기간</th><th>상태</th><th></th></tr></thead><tbody id="projects-done-tbody"></tbody></table></div>
+            <div class="hint" id="done-projects-empty" hidden>완료된 공사가 없습니다.</div>
+          </div>
         </div>
       </div>
 
@@ -505,6 +532,14 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
           <div class="formrow"><label>담당자명</label><input type="text" id="contact-name" placeholder="예: 김담당"></div>
           <div class="formrow"><label>전화번호</label><input type="tel" id="contact-phone" placeholder="예: 010-1234-5678"></div>
           <button type="button" class="btn btn-primary btn-block" id="btn-save-contact">저장</button>
+        </div>
+
+        <div class="card">
+          <h3>📁 백업 폴더 설정</h3>
+          <div class="section-note" id="backup-folder-support-note"></div>
+          <div class="hint" id="backup-folder-current" style="margin-bottom:8px;"></div>
+          <button type="button" class="btn btn-primary btn-block" id="btn-pick-backup-folder">폴더 선택</button>
+          <button type="button" class="btn btn-small" id="btn-clear-backup-folder" style="margin-top:6px;">폴더 설정 해제</button>
         </div>
 
         <div class="card">
@@ -597,6 +632,120 @@ function dayOfWeekLabel(dateStr){
 function monthKey(dateStr){ return dateStr ? dateStr.slice(0,7) : ""; }
 function nowIso(){ return new Date().toISOString(); }
 function fmtDate(dateStr){ if(!dateStr) return "-"; var p = dateStr.split("-"); return p[0].slice(2)+"."+p[1]+"."+p[2]; }
+
+/* ============================================================
+   v14: 백업 폴더 지정 (File System Access API) + 파일명 자동화
+   - PC의 크롬/엣지 계열만 폴더를 직접 지정해 자동 저장 가능
+   - 그 외(폰 등)에서는 이 섹션이 사용되지 않고 기존 다운로드 방식으로 대체됨
+============================================================ */
+var FS_ACCESS_SUPPORTED = (typeof window.showDirectoryPicker === "function");
+var BACKUP_IDB_NAME = "worklogBackupDB";
+var BACKUP_IDB_STORE = "handles";
+var BACKUP_IDB_KEY = "backupDirHandle";
+
+function openBackupIdb(){
+  return new Promise(function(resolve, reject){
+    if(!window.indexedDB){ reject(new Error("indexeddb unavailable")); return; }
+    var req = indexedDB.open(BACKUP_IDB_NAME, 1);
+    req.onupgradeneeded = function(){ req.result.createObjectStore(BACKUP_IDB_STORE); };
+    req.onsuccess = function(){ resolve(req.result); };
+    req.onerror = function(){ reject(req.error); };
+  });
+}
+function idbGet(key){
+  return openBackupIdb().then(function(db){
+    return new Promise(function(resolve, reject){
+      var tx = db.transaction(BACKUP_IDB_STORE, "readonly");
+      var req = tx.objectStore(BACKUP_IDB_STORE).get(key);
+      req.onsuccess = function(){ resolve(req.result); };
+      req.onerror = function(){ reject(req.error); };
+    });
+  }).catch(function(){ return null; });
+}
+function idbSet(key, val){
+  return openBackupIdb().then(function(db){
+    return new Promise(function(resolve, reject){
+      var tx = db.transaction(BACKUP_IDB_STORE, "readwrite");
+      tx.objectStore(BACKUP_IDB_STORE).put(val, key);
+      tx.oncomplete = function(){ resolve(); };
+      tx.onerror = function(){ reject(tx.error); };
+    });
+  });
+}
+function idbDel(key){
+  return openBackupIdb().then(function(db){
+    return new Promise(function(resolve, reject){
+      var tx = db.transaction(BACKUP_IDB_STORE, "readwrite");
+      tx.objectStore(BACKUP_IDB_STORE).delete(key);
+      tx.oncomplete = function(){ resolve(); };
+      tx.onerror = function(){ reject(tx.error); };
+    });
+  });
+}
+/* 저장된 폴더 핸들을 가져오되, 권한이 살아있는지(queryPermission) 확인. 사용자 클릭 없이는
+   재요청(requestPermission)이 안 되므로, 권한이 사라졌으면 null을 반환해 다시 선택하게 유도 */
+async function getSavedBackupDirHandle(){
+  if(!FS_ACCESS_SUPPORTED) return null;
+  var handle = await idbGet(BACKUP_IDB_KEY);
+  if(!handle) return null;
+  try{
+    var perm = await handle.queryPermission({mode:"readwrite"});
+    if(perm === "granted") return handle;
+    return null;
+  }catch(e){ return null; }
+}
+async function pickBackupDir(){
+  if(!FS_ACCESS_SUPPORTED) throw new Error("unsupported");
+  var handle = await window.showDirectoryPicker({mode:"readwrite"});
+  await idbSet(BACKUP_IDB_KEY, handle);
+  return handle;
+}
+async function clearBackupDir(){ await idbDel(BACKUP_IDB_KEY); }
+async function getOrCreateSubdir(rootHandle, name){
+  return await rootHandle.getDirectoryHandle(name, {create:true});
+}
+function safeFolderName(name){
+  return String(name||"").replace(/[\\\/:*?"<>|]/g,"_").trim() || "미지정";
+}
+/* 작업일지_[공사명]_[YYYYMMDD]_통합계.xlsx */
+function standardBackupFilename(projName, dateStr){
+  var d = (dateStr||todayStr()).replace(/-/g,"");
+  return "작업일지_"+safeFolderName(projName)+"_"+d+"_통합계.xlsx";
+}
+/* 폴더 핸들이 있으면 현장작업일지_백업/[연도]/[공사명]/ 밑에 저장하고, 없거나 실패하면
+   기존 방식(클로드 downloads capability 우선, 그다음 앵커 다운로드)으로 대체.
+   반환값: {mode:"folder", path} | {mode:"download"} */
+async function saveWorkbookBlob(blob, fname, projName){
+  var dirHandle = await getSavedBackupDirHandle();
+  if(dirHandle){
+    try{
+      var yearFolder = String(kstParts().y)+"년";
+      var yearHandle = await getOrCreateSubdir(dirHandle, yearFolder);
+      var projHandle = await getOrCreateSubdir(yearHandle, safeFolderName(projName));
+      var fileHandle = await projHandle.getFileHandle(fname, {create:true});
+      var writable = await fileHandle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return {mode:"folder", path:"현장작업일지_백업/"+yearFolder+"/"+safeFolderName(projName)+"/"+fname};
+    }catch(e){
+      reportError(e);
+      showToast("지정된 폴더에 저장하지 못해 다운로드로 대신합니다");
+    }
+  }
+  try{
+    var downloads = await window.claude.use("downloads");
+    if(downloads){
+      await downloads.save({filename:fname, data:blob});
+      return {mode:"download"};
+    }
+  }catch(e){ /* fall through to anchor */ }
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+  return {mode:"download"};
+}
 
 function showToast(msg){
   var t = document.getElementById("toast");
@@ -717,7 +866,7 @@ function createDbAdapter(db){
    URL을 설정하지 않으면(placeholder 상태) 자동으로 "이 브라우저 저장" 모드로 동작해서
    기능 테스트는 그대로 가능하지만, 다른 사람과 실시간 공유는 되지 않음.
 -------------------------------------------------------------- */
-var SHEETDB_API_URL = "https://sheetdb.io/api/v1/YOUR_SHEETDB_ID_HERE";
+var SHEETDB_API_URL = "https://sheetdb.io/api/v1/z5drlzix37ee8";
 function isSheetDBConfigured(){
   return SHEETDB_API_URL && SHEETDB_API_URL.indexOf("YOUR_SHEETDB_ID_HERE") === -1;
 }
@@ -990,6 +1139,7 @@ function doLogin(acc){
   document.getElementById("screen-main").hidden = false;
   document.getElementById("who-name").textContent = acc.name;
   document.getElementById("tab-settings-btn").hidden = acc.role !== "admin";
+  document.getElementById("tab-export-btn").hidden = acc.role !== "admin"; // v14: 엑셀 내보내기는 마스터(관리자)만
   renderContactBar();
   bootMain();
   switchMainTab(state.masterMode ? "settings" : "list");
@@ -1254,6 +1404,7 @@ function loadReportForDate(dateStr){
   state.currentDate = dateStr;
   document.getElementById("rep-date").value = dateStr;
   document.getElementById("rep-dow").textContent = dayOfWeekLabel(dateStr);
+  document.getElementById("prev-log-preview").hidden = true; // v14: 날짜/공사 바뀌면 어제 참고보기 닫기(오래된 정보 노출 방지)
   renderProjectDisplayLines();
   if(!pid){ return; }
   var existing = getLog(pid, dateStr);
@@ -1327,6 +1478,27 @@ document.getElementById("btn-pull-prev-plan").addEventListener("click", function
   document.getElementById("rep-today-work").value = prev.tomorrowWork;
   renderKakaoText();
   showToast("어제 계획을 불러왔습니다");
+});
+/* v14: 오늘 입력하면서 어제 전체 내용을 빠르게 참고할 수 있도록 토글로 보여줌(수정은 안 됨, 보기 전용) */
+document.getElementById("btn-toggle-prev-log").addEventListener("click", function(){
+  var box = document.getElementById("prev-log-preview");
+  if(!box.hidden){ box.hidden = true; return; }
+  if(!reportDraft){ box.hidden = false; box.textContent = "공사를 먼저 선택해주세요."; return; }
+  var prev = getPrevLog(reportDraft.projectId, reportDraft.date);
+  if(!prev){ box.hidden = false; box.textContent = "이 공사에는 이전 작업일보 기록이 없습니다."; return; }
+  var laborTotal = prev.laborRows.reduce(function(s,r){ return s+num(r.today); }, 0);
+  var lines = [
+    "["+fmtDate(prev.date)+" ("+dayOfWeekLabel(prev.date)+")]",
+    "공정률: 오늘 "+num(prev.progressActual)+"%",
+    "금일 작업: "+(prev.todayWork||"-"),
+    "내일 예정: "+(prev.tomorrowWork||"-"),
+    "투입 인원: "+laborTotal+"명",
+    "투입 장비: "+(prev.equipmentText||"-"),
+    "투입 자재: "+(prev.materialText||"-"),
+    "비고: "+(prev.memo||"-")
+  ];
+  box.textContent = lines.join("\n");
+  box.hidden = false;
 });
 
 function canEditReport(){
@@ -1779,12 +1951,12 @@ function renderExportTab(){
   var logs = logsForProject(pid);
   meta.textContent = "저장된 작업일보 "+logs.length+"건";
 }
-document.getElementById("btn-export-excel").addEventListener("click", async function(){
-  var pid = state.currentProjectId;
+/* v14: 워크북 생성 로직을 함수로 분리 - 수동 내보내기 버튼과 공사 종료 시 자동 백업이 공용으로 사용 */
+function buildProjectWorkbook(pid){
   var proj = projectById(pid);
-  if(!proj){ showToast("공사를 먼저 선택해주세요"); return; }
+  if(!proj) return null;
   var logs = logsForProject(pid);
-  if(!logs.length){ showToast("내보낼 작업일보가 없습니다"); return; }
+  if(!logs.length) return null;
   logs.forEach(migrateReportFields); // 예전 버전(표 형식) 일지도 자동으로 텍스트 한 줄로 변환
 
   var laborNames = []; logs.forEach(function(l){ l.laborRows.forEach(function(r){ if(laborNames.indexOf(r.role)<0 && r.role) laborNames.push(r.role); }); });
@@ -1899,25 +2071,31 @@ document.getElementById("btn-export-excel").addEventListener("click", async func
     XLSX.utils.book_append_sheet(wb, wsPay, "급여현황");
   }
 
-  var wbout = XLSX.write(wb, {bookType:"xlsx", type:"array"});
-  var blob = new Blob([wbout], {type:"application/octet-stream"});
-  var fname = proj.name.replace(/[\\/:*?"<>|]/g,"_")+"_작업일보.xlsx";
+  return {wb:wb, proj:proj, logs:logs};
+}
 
+/* v14: 공사 하나를 표준 파일명으로 백업(폴더 저장 또는 다운로드). 자동/수동 백업 공용.
+   반환값: {mode:"folder"|"download"} 또는 로그가 없으면 null */
+async function exportProjectExcel(pid){
+  var built = buildProjectWorkbook(pid);
+  if(!built) return null;
+  var wbout = XLSX.write(built.wb, {bookType:"xlsx", type:"array"});
+  var blob = new Blob([wbout], {type:"application/octet-stream"});
+  var fname = standardBackupFilename(built.proj.name, todayStr());
+  return await saveWorkbookBlob(blob, fname, built.proj.name);
+}
+
+document.getElementById("btn-export-excel").addEventListener("click", async function(){
+  var pid = state.currentProjectId;
+  var proj = projectById(pid);
+  if(!proj){ showToast("공사를 먼저 선택해주세요"); return; }
+  var logs = logsForProject(pid);
+  if(!logs.length){ showToast("내보낼 작업일보가 없습니다"); return; }
   try{
-    var downloads = await window.claude.use("downloads");
-    if(downloads){
-      await downloads.save({filename:fname, data:blob});
-      showToast("엑셀 파일을 저장했습니다");
-      return;
-    }
-  }catch(e){ /* fall through to anchor */ }
-  try{
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url; a.download = fname;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
-    showToast("엑셀 파일을 다운로드했습니다");
+    var result = await exportProjectExcel(pid);
+    if(!result) { showToast("내보낼 작업일보가 없습니다"); return; }
+    if(result.mode==="folder") showToast("백업 폴더에 저장했습니다");
+    else showToast("엑셀 파일을 다운로드했습니다");
   }catch(e){ reportError(e); showToast("내보내기 중 오류가 발생했습니다"); }
 });
 
@@ -1936,12 +2114,33 @@ function refreshSettingsTab(){
 }
 
 /* ---- 설정 탭 - 현황판(대시보드): 공사별 누계 공정률/오늘 작성여부/승인대기 건수 ---- */
-function renderDashboardTab(){
+/* v14: 요약 통계 + 진행중 공사 카드(완료 공사는 공사관리>완료된 공사 탭에서 확인) + 팀원별 활동현황 */
+function statBlock(label, val){
+  return '<div style="flex:1; min-width:84px; text-align:center;">'
+    + '<div class="hint">'+esc(label)+'</div>'
+    + '<div style="font-size:19px; font-weight:800;">'+esc(val)+'</div>'
+    + '</div>';
+}
+function renderDashboardSummary(){
+  var box = document.getElementById("dash-summary");
+  if(!box) return;
+  var activeCount = state.projects.filter(function(p){ return p.active!==false; }).length;
+  var doneCount = state.projects.filter(function(p){ return p.active===false; }).length;
+  var mKey = monthKey(todayStr());
+  var thisMonthLogs = state.logs.filter(function(l){ return monthKey(l.date)===mKey; }).length;
+  box.innerHTML = '<div class="card" style="display:flex; gap:10px; flex-wrap:wrap;">'
+    + statBlock("진행 중 공사", activeCount+"건")
+    + statBlock("완료된 공사", doneCount+"건")
+    + statBlock("이번달 작성", thisMonthLogs+"건")
+    + '</div>';
+}
+function renderDashboardProjectList(){
   var box = document.getElementById("dash-list");
   if(!box) return;
-  if(!state.projects.length){ box.innerHTML = '<div class="empty-note">등록된 공사가 없습니다. 공사관리에서 먼저 추가해주세요.</div>'; return; }
+  var list = state.projects.filter(function(p){ return p.active!==false; });
+  if(!list.length){ box.innerHTML = '<div class="empty-note">진행 중인 공사가 없습니다. 완료된 공사는 공사관리 > 완료된 공사 탭에서 확인하세요.</div>'; return; }
   var today = todayStr();
-  box.innerHTML = state.projects.map(function(p){
+  box.innerHTML = list.map(function(p){
     var logs = logsForProject(p.id);
     var cumProgress = logs.reduce(function(sum,l){ return sum + num(l.progressActual); }, 0);
     if(cumProgress > 100) cumProgress = 100;
@@ -1950,11 +2149,14 @@ function renderDashboardTab(){
     var wroteToday = logs.some(function(l){ return l.date === today; });
     var todayBadge = wroteToday ? '<span class="badge badge-approved">오늘 작성완료</span>' : '<span class="badge badge-submitted">오늘 미작성</span>';
     var pendingBadge = pendingCount>0 ? '<span class="badge badge-submitted">승인대기 '+pendingCount+'건</span>' : '<span class="badge badge-draft">승인대기 없음</span>';
-    var statusBadge = p.active===false ? '<span class="badge badge-draft">종료</span>' : '<span class="badge badge-approved">진행중</span>';
     var period = fmtDate(p.periodStart)+" ~ "+fmtDate(p.periodEnd);
+    var attLogs = attendanceLogsForProject(p.id).slice().sort(function(a,b){ return a.date<b.date?-1:(a.date>b.date?1:0); });
+    var latestAtt = attLogs.length ? attLogs[attLogs.length-1] : null;
+    var presentCount = latestAtt ? latestAtt.entries.filter(function(e){ return e.present; }).length : 0;
+    var laborNote = latestAtt ? (fmtDate(latestAtt.date)+" 출역 "+presentCount+"명") : "출역 기록 없음";
     return '<div class="card">'
-      + '<h3>'+esc(p.name)+' '+statusBadge+'</h3>'
-      + '<div class="hint" style="margin-bottom:7px;">'+esc(p.company||"-")+' · 강원도 '+esc(p.city||"-")+' · 진행기간 '+esc(period)+'</div>'
+      + '<h3>'+esc(p.name)+' <span class="badge badge-approved">진행중</span></h3>'
+      + '<div class="hint" style="margin-bottom:7px;">'+esc(p.company||"-")+' · 강원도 '+esc(p.city||"-")+' · 진행기간 '+esc(period)+' · '+esc(laborNote)+'</div>'
       + '<div style="display:flex; align-items:center; gap:8px; margin-bottom:7px;">'
         + '<div class="dash-bar-track"><div class="dash-bar-fill" style="width:'+cumProgress+'%;"></div></div>'
         + '<b class="mono" style="min-width:38px; text-align:right;">'+cumProgress+'%</b>'
@@ -1962,6 +2164,28 @@ function renderDashboardTab(){
       + '<div style="display:flex; gap:6px; flex-wrap:wrap;">'+todayBadge+pendingBadge+'</div>'
       + '</div>';
   }).join("");
+}
+function renderDashboardTeamActivity(){
+  var tbody = document.getElementById("dash-team-tbody");
+  if(!tbody) return;
+  var mKey = monthKey(todayStr());
+  var rows = state.accounts.filter(function(a){ return a.role !== "admin"; }).map(function(a){
+    var myLogs = state.logs.filter(function(l){ return l.createdBy === a.id; });
+    var thisMonthCount = myLogs.filter(function(l){ return monthKey(l.date)===mKey; }).length;
+    var latest = myLogs.slice().sort(function(x,y){ return x.date<y.date?-1:(x.date>y.date?1:0); }).pop();
+    return {acc:a, thisMonthCount:thisMonthCount, latestDate: latest ? latest.date : null};
+  });
+  if(!rows.length){ tbody.innerHTML = '<tr><td colspan="4" class="empty-note">등록된 팀원이 없습니다.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(function(r){
+    var statusNote = accountIsCurrentlyValid(r.acc) ? "" : ' <span class="badge badge-draft" style="font-size:9px;">중지</span>';
+    var latestLabel = r.latestDate ? fmtDate(r.latestDate) : "-";
+    return "<tr><td class='left'>"+esc(r.acc.name)+statusNote+"</td><td>"+esc(ROLE_LABEL[r.acc.role]||r.acc.role)+"</td><td class='mono'>"+r.thisMonthCount+"건</td><td class='mono'>"+esc(latestLabel)+"</td></tr>";
+  }).join("");
+}
+function renderDashboardTab(){
+  renderDashboardSummary();
+  renderDashboardProjectList();
+  renderDashboardTeamActivity();
 }
 function renderAccountProjectPicker(){
   var box = document.getElementById("acc-project-picker");
@@ -2032,23 +2256,86 @@ document.getElementById("btn-add-project").addEventListener("click", async funct
   refreshSettingsTab();
   renderProjectSelect();
 });
-function renderProjectsTable(){
-  var tbody = document.getElementById("projects-tbody");
-  tbody.innerHTML = state.projects.map(function(p){
-    var status = p.active===false ? '<span class="badge badge-draft">종료</span>' : '<span class="badge badge-approved">진행중</span>';
-    return "<tr><td style='text-align:left;'>"+esc(p.name)+"</td><td>"+esc(p.company||"-")+"</td><td>강원도 "+esc(p.city||"-")+"</td><td style='font-size:10.5px;'>"+fmtDate(p.periodStart)+"~"+fmtDate(p.periodEnd)+"</td><td>"+status+"</td>"
-      + "<td><button type='button' class='btn btn-small' data-toggle-proj='"+p.id+"'>"+(p.active===false?"재개":"종료")+"</button></td></tr>";
-  }).join("");
+/* v14: 진행중/완료 공사를 별도 탭으로 분리. 종료 버튼을 누르면 확인 후 자동 백업까지 실행하고,
+   완료 탭에서는 검색 + 재개 + 재백업이 가능하다 */
+function projectRowHtml(p, isDone){
+  var status = p.active===false ? '<span class="badge badge-draft">종료</span>' : '<span class="badge badge-approved">진행중</span>';
+  var btnLabel = isDone ? "재개" : "종료";
+  return "<tr><td style='text-align:left;'>"+esc(p.name)+"</td><td>"+esc(p.company||"-")+"</td><td>강원도 "+esc(p.city||"-")+"</td><td style='font-size:10.5px;'>"+fmtDate(p.periodStart)+"~"+fmtDate(p.periodEnd)+"</td><td>"+status+"</td>"
+    + "<td style='white-space:nowrap;'><button type='button' class='btn btn-small' data-toggle-proj='"+p.id+"'>"+btnLabel+"</button>"
+    + (isDone ? " <button type='button' class='btn btn-small' data-rebackup-proj='"+p.id+"'>📥 재백업</button>" : "")
+    + "</td></tr>";
+}
+function wireProjectToggleButtons(tbody){
   tbody.querySelectorAll("[data-toggle-proj]").forEach(function(btn){
     btn.addEventListener("click", async function(){
       var p = projectById(btn.getAttribute("data-toggle-proj"));
-      p.active = p.active===false ? true : false;
-      await state.storage.save("projects", p.id, p);
+      var willClose = p.active !== false;
+      if(willClose){
+        if(!confirm("["+p.name+"] 공사를 종료할까요?\n종료하면 엑셀로 자동 백업된 뒤 완료된 공사 목록으로 이동하고, 팀원 화면에서는 더 이상 보이지 않습니다.")) return;
+        p.active = false;
+        await state.storage.save("projects", p.id, p);
+        try{
+          var result = await exportProjectExcel(p.id);
+          if(result && result.mode==="folder") showToast("공사를 종료하고 백업 폴더에 저장했습니다");
+          else if(result) showToast("공사를 종료하고 엑셀을 다운로드했습니다");
+          else showToast("공사를 종료했습니다 (작업일보가 없어 백업은 생략)");
+        }catch(e){ reportError(e); showToast("공사는 종료됐지만 백업 중 오류가 발생했습니다"); }
+      } else {
+        if(!confirm("["+p.name+"] 공사를 다시 진행 중으로 되돌릴까요?\n하자 보수 등으로 재작업이 필요할 때 사용하세요.")) return;
+        p.active = true;
+        await state.storage.save("projects", p.id, p);
+        showToast("공사를 다시 진행 중으로 되돌렸습니다");
+      }
       renderProjectsTable();
       renderProjectSelect();
+      renderDashboardTab();
     });
   });
 }
+function renderActiveProjectsTable(){
+  var tbody = document.getElementById("projects-active-tbody");
+  var list = state.projects.filter(function(p){ return p.active!==false; });
+  tbody.innerHTML = list.map(function(p){ return projectRowHtml(p,false); }).join("");
+  wireProjectToggleButtons(tbody);
+}
+function renderDoneProjectsTable(){
+  var tbody = document.getElementById("projects-done-tbody");
+  var emptyNote = document.getElementById("done-projects-empty");
+  var summary = document.getElementById("done-projects-summary");
+  var q = (document.getElementById("done-project-search").value||"").trim();
+  var all = state.projects.filter(function(p){ return p.active===false; });
+  summary.textContent = "총 "+all.length+"건 완료";
+  var list = q ? all.filter(function(p){ return p.name.indexOf(q)>=0; }) : all;
+  if(!list.length){ tbody.innerHTML=""; emptyNote.hidden=false; return; }
+  emptyNote.hidden = true;
+  tbody.innerHTML = list.map(function(p){ return projectRowHtml(p,true); }).join("");
+  wireProjectToggleButtons(tbody);
+  tbody.querySelectorAll("[data-rebackup-proj]").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var pid = btn.getAttribute("data-rebackup-proj");
+      try{
+        var result = await exportProjectExcel(pid);
+        if(!result){ showToast("이 공사에는 작업일보가 없습니다"); return; }
+        showToast(result.mode==="folder" ? "백업 폴더에 다시 저장했습니다" : "엑셀 파일을 다시 다운로드했습니다");
+      }catch(e){ reportError(e); showToast("백업 중 오류가 발생했습니다"); }
+    });
+  });
+}
+function renderProjectsTable(){
+  renderActiveProjectsTable();
+  renderDoneProjectsTable();
+}
+document.getElementById("done-project-search").addEventListener("input", renderDoneProjectsTable);
+document.querySelectorAll('[data-projstab]').forEach(function(btn){
+  btn.addEventListener("click", function(){
+    document.querySelectorAll('[data-projstab]').forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    var tab = btn.getAttribute("data-projstab");
+    document.getElementById("projstab-active").hidden = tab !== "active";
+    document.getElementById("projstab-done").hidden = tab !== "done";
+  });
+});
 
 /* ---- 설정 탭 - 카톡텍스트 목록 ---- */
 function renderKakaoListProjectSelect(){
@@ -2110,7 +2397,53 @@ function renderAppSettingsTab(){
   document.getElementById("contact-name").value = state.contact ? (state.contact.name||"") : "";
   document.getElementById("contact-phone").value = state.contact ? (state.contact.phone||"") : "";
   document.getElementById("storage-mode-line").textContent = storageModeLabel();
+  refreshBackupFolderUI();
 }
+/* v14: 백업 폴더 설정 UI - PC 크롬/엣지에서만 폴더 자동저장이 가능하므로, 미지원 브라우저(폰 등)에는
+   그 사실을 안내하고 폴더 선택 버튼 자체를 숨긴다 */
+async function refreshBackupFolderUI(){
+  var note = document.getElementById("backup-folder-support-note");
+  var current = document.getElementById("backup-folder-current");
+  var pickBtn = document.getElementById("btn-pick-backup-folder");
+  var clearBtn = document.getElementById("btn-clear-backup-folder");
+  if(!FS_ACCESS_SUPPORTED){
+    note.textContent = "이 브라우저(폰 브라우저 등)에서는 폴더 자동 저장 기능을 지원하지 않습니다. PC의 크롬/엣지 브라우저에서 마스터 페이지를 열어 설정하면, 그 이후부터는 백업할 때 지정한 폴더에 자동으로 저장됩니다. 지금은 다운로드 폴더에 파일명만 자동 정리되어 저장됩니다.";
+    pickBtn.hidden = true; clearBtn.hidden = true;
+    current.textContent = "";
+    return;
+  }
+  note.textContent = "폴더를 한 번 지정하면, 이후 백업(수동 내보내기, 공사 종료 시 자동 백업)이 모두 이 폴더 밑에 [연도]/[공사명] 순서로 자동 정리되어 저장됩니다.";
+  pickBtn.hidden = false;
+  var handle = await getSavedBackupDirHandle();
+  var rawHandle = await idbGet(BACKUP_IDB_KEY);
+  if(handle){
+    current.textContent = "✅ 현재 지정된 폴더: "+(handle.name || "(이름 확인 불가)");
+    clearBtn.hidden = false;
+  } else if(rawHandle){
+    current.textContent = "⚠ 이전에 지정한 폴더의 접근 권한이 사라졌습니다. 아래 버튼으로 다시 선택해주세요.";
+    clearBtn.hidden = false;
+  } else {
+    current.textContent = "아직 폴더가 지정되지 않았습니다. (지금은 다운로드 폴더에 저장됩니다)";
+    clearBtn.hidden = true;
+  }
+}
+document.getElementById("btn-pick-backup-folder").addEventListener("click", async function(){
+  try{
+    await pickBackupDir();
+    showToast("백업 폴더를 지정했습니다");
+    refreshBackupFolderUI();
+  }catch(e){
+    if(e && e.name === "AbortError") return; // 사용자가 폴더 선택 창을 취소함
+    reportError(e);
+    showToast("폴더 선택 중 오류가 발생했습니다");
+  }
+});
+document.getElementById("btn-clear-backup-folder").addEventListener("click", async function(){
+  if(!confirm("백업 폴더 설정을 해제할까요? 이후 백업은 다운로드 폴더에 저장됩니다.")) return;
+  await clearBackupDir();
+  showToast("백업 폴더 설정을 해제했습니다");
+  refreshBackupFolderUI();
+});
 document.getElementById("btn-save-contact").addEventListener("click", async function(){
   var name = document.getElementById("contact-name").value.trim();
   var phone = document.getElementById("contact-phone").value.trim();
