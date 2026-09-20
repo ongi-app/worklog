@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>현장 작업일보</title>
+<title>현장 작업일보 (연습용 - 샘플)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -52,7 +52,8 @@ button{cursor:pointer;}
 #err-banner pre{white-space:pre-wrap; word-break:break-all; flex:1; margin:0; font-family:"IBM Plex Mono",monospace;}
 #err-banner button{background:#fff; color:#b3261e; border:1px solid #fff; border-radius:4px; padding:3px 8px; font-size:11px; flex-shrink:0;}
 
-#toast{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:var(--fg); color:var(--bg); padding:9px 16px; border-radius:6px; font-size:12.5px; z-index:9998; opacity:0; pointer-events:none; transition:opacity .2s;}
+#toast{position:fixed; left:50%; bottom:74px; transform:translateX(-50%); background:var(--fg); color:var(--bg); padding:9px 16px; border-radius:6px; font-size:12.5px; z-index:9998; opacity:0; pointer-events:none; transition:opacity .2s;}
+@media (min-width:900px){ #toast{bottom:18px;} }
 #toast.show{opacity:1;}
 
 /* ---------- login ---------- */
@@ -76,7 +77,9 @@ button{cursor:pointer;}
 /* ---------- main shell ---------- */
 #screen-main{min-height:100%; display:flex; flex-direction:column;}
 .topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:50; background:var(--accent); color:var(--accent-fg); padding:9px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--line);}
-.topbar .brand{font-weight:700; font-size:14.5px; flex:1;}
+.topbar .brand{font-weight:700; font-size:14.5px; flex:none;}
+/* v15.2: 공사명을 각 화면 맨 위에 항상 떠 있는 셀렉트로 - 상단바 안에 넣어서 스크롤해도 계속 보이게 함 */
+#sel-project{flex:1; min-width:0; background:var(--accent-fg); color:var(--accent); border:none; border-radius:6px; padding:7px 8px; font-weight:700; font-size:13.5px;}
 .topbar .who{font-size:11.5px; text-align:right; line-height:1.3; opacity:.95;}
 .topbar #btn-logout{background:transparent; border:1px solid var(--accent-fg); color:var(--accent-fg); border-radius:5px; padding:5px 9px; font-size:11px; margin-left:6px;}
 
@@ -135,6 +138,9 @@ table.gridtable th.col-x,table.gridtable td.col-x{width:34px;}
 .btn-block{width:100%;}
 .btn-icon{padding:5px 8px; font-size:13px; line-height:1;}
 .btn-plus{flex:none; width:30px; height:30px; padding:0; border-radius:6px; font-size:16px; font-weight:700; line-height:1;}
+/* v15.2: 수정/저장(잠그기) 버튼 짝 - 지금 상태인 쪽만 진하게, 반대쪽은 연하게 */
+.lockbtn-pair{display:flex; gap:4px;}
+.lockbtn-pair .btn-dim{opacity:.4;}
 
 .badge{display:inline-block; padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:700; border:1px solid var(--line);}
 .badge-draft{background:var(--panel2); color:var(--muted);}
@@ -143,6 +149,13 @@ table.gridtable th.col-x,table.gridtable td.col-x{width:34px;}
 
 .hint{font-size:11px; color:var(--muted); margin-top:2px;}
 .section-note{font-size:11px; color:var(--muted); margin-bottom:8px;}
+
+/* v15.2: 앱설정의 여러 안내문구를 하나로 묶어 시야를 정리하는 박스 */
+.guide-box{border:2px solid #c9a227; background:#fffaf0; border-radius:10px; padding:12px 10px; margin-bottom:2px;}
+.guide-box h3{color:#7a5c00;}
+.guide-box .guide-item{margin-bottom:10px;}
+.guide-box .guide-item:last-child{margin-bottom:0;}
+.guide-box .guide-item b{color:#7a5c00;}
 
 .tabbtn2bar{display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;}
 .tabbtn2{flex:1; min-width:64px; border:1px solid var(--line); background:var(--panel); border-radius:5px; padding:7px 4px; font-size:11.5px; font-weight:600; color:var(--muted);}
@@ -158,17 +171,22 @@ table.gridtable th.col-x,table.gridtable td.col-x{width:34px;}
 .compact-row{flex-wrap:nowrap;}
 .narrow{max-width:50px; flex:none!important; text-align:center; padding-left:2px!important; padding-right:2px!important;}
 .sep{flex:none; color:var(--muted); font-size:12px; padding:0 1px;}
-table.gridtable td .combo-cell{display:flex; gap:3px; align-items:center; width:100%;}
-table.gridtable td .combo-cell select{flex:none; width:28px; padding:5px 0!important; font-size:10px!important; border:1px solid var(--line); border-radius:3px; background:var(--panel2); text-align:center;}
-table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
+table.gridtable td .combo-cell{display:flex; gap:4px; align-items:center; width:100%;}
+table.gridtable td .combo-cell select{flex:1.1; min-width:56px; width:auto; padding:5px 2px!important; font-size:10.5px!important; border:1px solid var(--line); border-radius:3px; background:var(--panel2); text-align:center;}
+table.gridtable td .combo-cell input{flex:1.3; min-width:0; width:auto;}
 
 /* ---------- 종이양식(카톡 순서 그대로) 한 줄짜리 폼 ---------- */
 .paper-line{display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:nowrap;}
 .paper-line:last-child{margin-bottom:0;}
 .paper-tag{flex:none; font-weight:700; font-size:13px; width:14px; text-align:center; color:var(--fg);}
-.paper-label{flex:none; font-weight:700; font-size:12.5px; color:var(--fg); white-space:nowrap;}
+/* 라벨 폭을 고정해서 카드마다 입력칸 시작 위치(앞)와 끝 위치(뒤)가 한 줄로 맞춰지게 함(사장님 요청) */
+.paper-label{flex:none; font-weight:700; font-size:12px; color:var(--fg); white-space:nowrap; width:76px;}
+.paper-sublabel{flex:none; font-weight:400; font-size:11px; color:var(--muted); white-space:nowrap; width:76px;}
 .paper-value{flex:1; min-width:0; font-size:12.5px; color:var(--fg); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .paper-sep{flex:none; color:var(--muted); font-weight:400; padding:0 1px;}
+@media (max-width:400px){
+  .paper-label,.paper-sublabel{width:64px;}
+}
 .paper-line input[type=text],.paper-line input[type=number],.paper-line input[type=date],.paper-line select{
   border:none; border-radius:4px; padding:6px 7px; background:#ffffff; flex:1; min-width:0; font-size:13px; color:var(--fg);
 }
@@ -190,16 +208,64 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
 
 .empty-note{text-align:center; color:var(--muted); font-size:12px; padding:20px 0;}
 
+/* ---------- v15: 공사명 카드 진입 화면 (로그인/PIN 대체) ---------- */
+.projectentry{max-width:520px; margin:0 auto; padding:env(safe-area-inset-top,0px) 16px 40px;}
+.projectentry .login-title{font-size:20px; font-weight:700; text-align:center; margin:26px 0 3px;}
+.projectentry .login-sub{font-size:12.5px; color:var(--muted); text-align:center; margin-bottom:18px;}
+.pe-section-title{font-size:12px; font-weight:700; color:var(--muted); margin:16px 2px 8px;}
+.project-card-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.project-card{border:1.5px solid var(--line); background:var(--panel); border-radius:10px; padding:20px 10px; text-align:center; font-weight:700; font-size:14px; min-height:78px; display:flex; align-items:center; justify-content:center; word-break:keep-all;}
+.project-card:active{background:var(--panel2);}
+.pe-toggle-done{display:block; margin:18px auto 0; font-size:12px; color:var(--muted); background:none; border:none; text-decoration:underline; text-align:center;}
+
+/* ---------- v15: 상단바 공사명 눌러서 공사 목록으로 나가기 ---------- */
+.topbar .brand{cursor:pointer;}
+
+/* ---------- v15: 로딩 오버레이 ---------- */
+#boot-loading{position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; z-index:9000;}
+#boot-loading .spin{width:34px; height:34px; border:3px solid var(--line-soft); border-top-color:var(--accent); border-radius:50%; animation:spin814 .8s linear infinite;}
+@keyframes spin814{ to{ transform:rotate(360deg); } }
+#boot-loading .spin-label{font-size:12.5px; color:var(--muted);}
+
+/* ---------- v15: 항목 관리 (인부/자재/장비) - 세 개의 기둥(컬럼)으로 배치해서 스크롤을 줄임 ---------- */
+.itemmgr-cols{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;}
+.itemmgr-col{min-width:0;}
+.itemmgr-col-title{font-weight:700; font-size:11.5px; margin:0 0 6px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.itemmgr-list{display:flex; flex-direction:column; gap:5px; margin-bottom:6px;}
+.itemmgr-row{display:flex; gap:4px; align-items:center;}
+.itemmgr-row input[type=text]{flex:1; min-width:0; border:1px solid var(--line-soft); border-radius:4px; padding:6px 5px; background:#fff; font-size:11.5px;}
+.itemmgr-add-row{display:flex; gap:4px; margin-top:4px;}
+.itemmgr-add-row input[type=text]{flex:1; min-width:0; padding:6px 5px; font-size:11.5px;}
+@media (max-width:480px){
+  .itemmgr-cols{gap:5px;}
+  .itemmgr-row input[type=text],.itemmgr-add-row input[type=text]{padding:5px 3px; font-size:10.8px;}
+  .itemmgr-col-title{font-size:10.8px;}
+}
+
+/* ---------- v15: 반응형 메뉴 - 폰(하단 탭바)/PC·태블릿(좌측 사이드 메뉴) ---------- */
+.tabbar{position:fixed; left:0; right:0; bottom:0; z-index:60; padding-bottom:env(safe-area-inset-bottom,0px);}
+.wrap{padding-bottom:78px;}
+@media (min-width:900px){
+  #screen-main{padding-left:176px;}
+  .tabbar{left:0; right:auto; top:0; bottom:0; width:176px; flex-direction:column; border-bottom:none; border-right:2px solid var(--line); padding-bottom:0; padding-top:env(safe-area-inset-top,0px);}
+  .tabbtn{flex:none; justify-content:flex-start; gap:8px; padding:14px 16px; border-right:none; border-bottom:1px solid var(--line-soft);}
+  .tabbtn.active{box-shadow:inset 3px 0 0 var(--accent);}
+  .tabbtn-txt{white-space:nowrap;}
+  .wrap{padding-bottom:16px;}
+}
+
 @media (max-width:420px){
   .formrow label{min-width:100%; margin-bottom:2px;}
   .compact-card .formrow label{min-width:40px; margin-bottom:0;}
   table.gridtable{font-size:10.2px;}
   .narrow{max-width:42px;}
-  table.gridtable td .combo-cell select{width:24px;}
+  table.gridtable td .combo-cell select{min-width:46px; font-size:9.5px!important;}
 }
 </style>
 </head>
 <body>
+
+<div style="position:sticky; top:0; z-index:999; background:#7a4b00; color:#fff; font-size:11.5px; font-weight:700; text-align:center; padding:5px 8px;">🧪 연습용 샘플 - 여기서 누르는 건 진짜 구글시트에 저장 안 돼요. 마음껏 눌러보세요</div>
 
 <div id="err-banner" hidden>
   <pre id="err-text"></pre>
@@ -208,56 +274,42 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
 </div>
 <div id="toast"></div>
 
-<!-- ============ LOGIN ============ -->
-<div id="screen-login" class="loginwrap">
-  <div id="master-badge" class="master-badge" hidden>관리자 전용 로그인</div>
-  <div class="login-title">현장 작업일보</div>
-  <div class="login-sub" id="login-sub">이름을 선택해주세요</div>
-  <div id="login-name-grid" class="name-grid"></div>
-  <div id="login-pin-area" hidden>
-    <div class="pin-title" id="pin-title">PIN 4자리를 입력하세요</div>
-    <div class="pin-dots" id="pin-dots"></div>
-    <div class="pin-pad" id="pin-pad"></div>
-    <button id="pin-back" type="button">← 뒤로</button>
-  </div>
+<!-- ============ 초기 데이터 로딩 오버레이 ============ -->
+<div id="boot-loading" hidden>
+  <div class="spin"></div>
+  <div class="spin-label" id="boot-loading-label">불러오는 중...</div>
 </div>
 
 <!-- ============ MAIN ============ -->
 <div id="screen-main" hidden>
   <div class="topbar">
-    <div class="brand">📝 작업일보</div>
-    <div class="who"><span id="who-name"></span></div>
-    <button id="btn-logout" type="button">로그아웃</button>
+    <span class="brand">📝</span>
+    <select id="sel-project"></select>
   </div>
   <div id="contact-bar" class="contact-bar" hidden></div>
 
   <div class="tabbar" id="main-tabbar">
-    <button type="button" class="tabbtn active" data-maintab="list"><span class="tabbtn-emoji">📋</span><span class="tabbtn-txt">작업<br>목록</span></button>
-    <button type="button" class="tabbtn" data-maintab="report"><span class="tabbtn-emoji">📝</span><span class="tabbtn-txt">작업<br>일보</span></button>
-    <button type="button" class="tabbtn" data-maintab="attendance"><span class="tabbtn-emoji">👥</span><span class="tabbtn-txt">출역<br>일지</span></button>
-    <button type="button" class="tabbtn" id="tab-export-btn" data-maintab="export" hidden><span class="tabbtn-emoji">📁</span><span class="tabbtn-txt">내보<br>내기</span></button>
-    <button type="button" class="tabbtn" id="tab-settings-btn" data-maintab="settings" hidden><span class="tabbtn-emoji">⚙</span><span class="tabbtn-txt">설정</span></button>
+    <button type="button" class="tabbtn active" data-maintab="report"><span class="tabbtn-emoji">📝</span><span class="tabbtn-txt">작업<br>일보</span></button>
+    <button type="button" class="tabbtn" id="tab-attendance-btn" data-maintab="attendance"><span class="tabbtn-emoji">👥</span><span class="tabbtn-txt">출역<br>일지</span></button>
+    <button type="button" class="tabbtn" data-maintab="kakao"><span class="tabbtn-emoji">💬</span><span class="tabbtn-txt">카톡<br>목록</span></button>
+    <button type="button" class="tabbtn" data-maintab="dashboard"><span class="tabbtn-emoji">📊</span><span class="tabbtn-txt">현황<br>판</span></button>
+    <button type="button" class="tabbtn" data-maintab="settings"><span class="tabbtn-emoji">⚙</span><span class="tabbtn-txt">설정</span></button>
   </div>
 
   <div class="wrap">
 
-    <!-- 프로젝트 선택 + 기본정보 한 줄 (모든 탭 공통, 테두리 유지) -->
-    <div class="card card-boxed" id="project-picker-card">
-      <div id="project-pill-row" style="display:flex; flex-wrap:wrap; gap:7px;"></div>
-      <select id="sel-project" hidden></select>
-      <div id="project-meta-line" style="margin-top:6px; font-size:12.5px; font-weight:600;"></div>
-    </div>
-
-    <!-- ===== 탭1: 작업목록 ===== -->
-    <div id="maintab-list">
-      <div class="card">
-        <h3>작업일보 목록</h3>
-        <div id="list-rows"></div>
-      </div>
-    </div>
+    <!-- v15.2: 공사 셀렉트는 상단바로 옮김(모든 탭에서 항상 보이게). 여기는 업체명 등 부가정보 한 줄만 -->
+    <div id="project-meta-line" style="font-size:12.5px; font-weight:600; margin:8px 2px 0;"></div>
+    <div id="project-pill-row" hidden></div>
 
     <!-- ===== 탭2: 작업일보 (입력, 카톡 순서 그대로의 종이양식 한 줄 형식) ===== -->
     <div id="maintab-report" hidden>
+
+      <!-- v15: 작업목록 탭이 따로 없어진 대신, 지난 기록을 여기서 접었다 펼 수 있게 함 -->
+      <div class="card">
+        <h3>📋 지난 작업일보 <button type="button" class="btn btn-small" id="btn-toggle-list">목록 보기</button></h3>
+        <div id="list-rows" hidden></div>
+      </div>
 
       <!-- 아래부터는 카톡 공유용 텍스트가 실제로 읽히는 순서와 똑같이 맞춤:
            사업명 → 공정율 → 업체명 → 날짜/날씨 → 금일 작업사항 → 투입 인원 → 투입 장비 → 투입 자재 → 내일 작업계획 → 특이사항 -->
@@ -277,17 +329,14 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
           <span class="paper-tag">□</span><span class="paper-label">업체명</span>
           <span class="paper-value" id="rep-company-display">-</span>
         </div>
-        <div class="paper-line" style="flex-wrap:wrap;">
-          <span class="paper-tag">◇</span>
-          <input type="date" id="rep-date" class="mono" style="flex:none; width:132px;">
-          <span id="rep-dow" class="mono" style="flex:none; font-weight:700;"></span>
-          <span class="paper-sep">|</span>
-          <span id="rep-weather-display" class="mono" style="flex:1 1 128px; min-width:112px; white-space:nowrap; font-size:12px;"></span>
-          <button type="button" class="btn btn-small btn-icon" id="btn-refetch-weather" title="자동 날씨 다시 불러오기">🔄</button>
-        </div>
         <div class="paper-line">
-          <span class="paper-tag" style="visibility:hidden;">◇</span>
-          <input type="text" id="rep-weather-note" placeholder="날씨가 다를 경우 변경/추가 메모" style="flex:1;">
+          <span class="paper-tag">◇</span>
+          <input type="date" id="rep-date" class="mono" style="flex:none; width:110px;">
+          <span id="rep-dow" class="mono" style="flex:none; font-weight:700; width:16px; text-align:center;"></span>
+          <span class="paper-sep">|</span>
+          <span id="rep-weather-display" class="mono" style="flex:none; white-space:nowrap; font-size:12px;"></span>
+          <input type="text" id="rep-weather-note" placeholder="추가날씨 메모" style="flex:1; min-width:0;">
+          <button type="button" class="btn btn-small btn-icon" id="btn-refetch-weather" title="자동 날씨 다시 불러오기">🔄</button>
         </div>
         <div class="hint" id="weather-auto-hint"></div>
         <div id="approval-line" class="hint"></div>
@@ -295,12 +344,9 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
 
       <div class="card compact-card">
         <div class="paper-line">
-          <span class="paper-tag">◇</span><span class="paper-label">금일 작업사항</span>
-          <input type="text" id="rep-today-work" placeholder="오늘 진행한 작업 내용" style="flex:1;">
-          <button type="button" class="btn btn-small btn-icon" id="btn-pull-prev-plan" title="어제 '내일 예정'을 여기로 불러오기">🔄</button>
-        </div>
-        <div style="margin-top:6px;">
-          <button type="button" class="btn btn-small" id="btn-toggle-prev-log">📋 어제 작업일보 참고</button>
+          <span class="paper-tag">◇</span><span class="paper-label">금일 작업</span>
+          <input type="text" id="rep-today-work" placeholder="오늘 진행한 작업 내용" style="flex:1; min-width:0;">
+          <button type="button" class="btn btn-small" id="btn-toggle-prev-log" style="flex:none;">어제</button>
         </div>
         <div id="prev-log-preview" class="hint mono" style="margin-top:6px; white-space:pre-wrap; background:var(--panel2, transparent); border:1px solid var(--line); border-radius:6px; padding:8px;" hidden></div>
       </div>
@@ -308,8 +354,8 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
       <div class="card compact-card">
         <div class="paper-line">
           <span class="paper-tag">◇</span><span class="paper-label">투입 인원</span>
-          <span class="hint" style="margin:0;">출역일지에서 불러오세요</span>
-          <button type="button" class="btn btn-small btn-icon" id="btn-sync-attendance" title="출역일지에 체크된 인원으로 다시 채우기" style="margin-left:auto;">🔄</button>
+          <span class="hint" id="labor-section-hint" style="margin:0;">출역일지에서 불러오세요</span>
+          <button type="button" class="btn btn-small btn-primary" id="btn-sync-attendance" title="출역일지에 체크된 인원으로 다시 채우기" style="margin-left:auto; flex:none;">🔄 출역</button>
         </div>
         <div class="tblwrap">
           <table class="gridtable" id="tbl-labor">
@@ -330,7 +376,7 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
         </div>
         <div class="paper-line">
           <span class="paper-tag" style="visibility:hidden;">◇</span>
-          <span class="hint" style="margin:0; flex:none; white-space:nowrap;">투입 차량</span>
+          <span class="paper-sublabel">투입 차량</span>
           <input type="text" id="rep-vehicle-note" placeholder="예: 코란도 스포츠 1대, 1톤 포터 1대" style="flex:1;">
         </div>
       </div>
@@ -358,8 +404,8 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
         </div>
         <div class="paper-line">
           <span class="paper-tag" style="visibility:hidden;">◇</span>
-          <span class="hint" style="margin:0; flex:none; white-space:nowrap;">지시사항</span>
-          <input type="text" id="rep-instructions" placeholder="감독 지시사항 (카톡 텍스트엔 안 들어감)" style="flex:1;">
+          <span class="paper-sublabel">지시사항</span>
+          <input type="text" id="rep-instructions" placeholder="카톡반영X" style="flex:1;">
         </div>
       </div>
 
@@ -376,28 +422,37 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
     <!-- ===== 탭3: 출석명부 ===== -->
     <div id="maintab-attendance" hidden>
       <div class="card compact-card">
-        <div class="formrow compact-row">
-          <input type="date" id="att-date" class="mono" style="flex:1.15; min-width:0;">
-          <span id="att-dow" class="mono" style="flex:none;"></span>
+        <div class="formrow compact-row" style="justify-content:space-between; flex-wrap:nowrap;">
+          <div style="display:flex; gap:8px; align-items:center; flex:1; min-width:0;">
+            <input type="date" id="att-date" class="mono" style="flex:1.15; min-width:0;">
+            <span id="att-dow" class="mono" style="flex:none;"></span>
+          </div>
+          <span class="lockbtn-pair">
+            <button type="button" class="btn btn-small btn-dim" id="btn-att-edit">✏ 수정</button>
+            <button type="button" class="btn btn-small btn-primary" id="btn-att-save">💾 저장</button>
+          </span>
         </div>
-        <div class="hint">체크박스로 오늘 출역 여부를 표시하고, 공수(工數)를 입력하세요. 1.0=하루 종일, 0.5=반나절</div>
+        <div class="hint" id="att-summary-top" style="margin-top:4px; font-weight:700;"></div>
+        <div class="hint">체크박스로 오늘 출역 여부를 표시하고, 공수(工數)를 입력하세요. 평소엔 잠겨있어 체크만 가능하고, "수정"을 눌러야 공수·이름을 고칠 수 있습니다.</div>
       </div>
 
       <div class="card compact-card">
         <h3>출역 명부 <span class="num-badge" id="att-present-badge">0/0</span></h3>
         <div class="tblwrap">
           <table class="gridtable" id="tbl-attendance">
-            <thead><tr><th class="col-check">출역</th><th class="left">이름</th><th class="left">직종</th><th style="width:15%;">공수</th><th class="col-x"></th></tr></thead>
+            <thead><tr><th style="width:24px;">#</th><th class="col-check" style="width:50px; white-space:nowrap;">출역</th><th class="left">이름</th><th style="width:18%;">공수</th><th class="col-x"></th></tr></thead>
             <tbody id="attendance-rows"></tbody>
           </table>
         </div>
-        <div class="formrow" style="margin-top:8px; flex-wrap:nowrap;">
-          <input type="text" id="roster-new-name" placeholder="이름" style="flex:1; min-width:0;">
-          <select id="roster-new-role" style="flex:1.2; min-width:0;"></select>
-          <button type="button" class="btn btn-small btn-primary" id="btn-add-roster" style="flex:none;">+ 추가</button>
-        </div>
-        <div class="formrow" id="roster-new-role-custom-wrap" hidden style="margin-top:-2px;">
-          <input type="text" id="roster-new-role-custom" placeholder="직종을 직접 입력하세요" style="flex:1;">
+        <div id="roster-add-wrap">
+          <div class="formrow" style="margin-top:8px; flex-wrap:nowrap;">
+            <input type="text" id="roster-new-name" placeholder="이름" style="flex:1; min-width:0;">
+            <select id="roster-new-role" style="flex:1.2; min-width:0;"></select>
+            <button type="button" class="btn btn-small btn-primary" id="btn-add-roster" style="flex:none;">+ 추가</button>
+          </div>
+          <div class="formrow" id="roster-new-role-custom-wrap" hidden style="margin-top:-2px;">
+            <input type="text" id="roster-new-role-custom" placeholder="직종을 직접 입력하세요" style="flex:1;">
+          </div>
         </div>
       </div>
 
@@ -405,42 +460,33 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
       <div class="hint" id="attendance-save-meta" style="text-align:center; margin-top:8px;"></div>
     </div>
 
-    <!-- ===== 탭4: 내보내기 ===== -->
-    <div id="maintab-export" hidden>
+    <!-- ===== 탭: 카톡목록 (설정에서 승격됨) ===== -->
+    <div id="maintab-kakao" hidden>
       <div class="card">
-        <h3>엑셀로 내보내기</h3>
-        <div class="section-note">선택한 공사명 전체 기간을 ① 통합계(하루 한 줄 요약) ② 카톡텍스트(단톡방 공유 문구) ③ 작업일보(하루 한 장, 종이 양식) 세 종류의 시트로 묶은 엑셀 파일 1개로 받습니다.</div>
-        <button type="button" class="btn btn-primary btn-block" id="btn-export-excel">📥 엑셀 파일 만들기</button>
-        <div class="hint" id="export-meta" style="margin-top:8px;"></div>
+        <h3>카톡 공유 텍스트 목록</h3>
+        <div class="hint" id="kakao-list-empty" hidden>아직 저장된 작업일보가 없습니다.</div>
+        <div id="kakao-list-items"></div>
       </div>
+    </div>
+
+    <!-- ===== 탭: 현황판 (설정에서 승격됨) ===== -->
+    <div id="maintab-dashboard" hidden>
+      <div class="card">
+        <h3>📊 이 공사 현황</h3>
+      </div>
+      <div id="dash-summary"></div>
+      <div id="dash-list"></div>
     </div>
 
     <!-- ===== 탭4: 설정 (관리자) ===== -->
     <div id="maintab-settings" hidden>
       <div class="tabbtn2bar">
-        <button type="button" class="tabbtn2 active" data-stab="dashboard">현황판</button>
-        <button type="button" class="tabbtn2" data-stab="payroll">급여현황</button>
-        <button type="button" class="tabbtn2" data-stab="accounts">계정관리</button>
+        <button type="button" class="tabbtn2 active" data-stab="payroll">급여현황</button>
         <button type="button" class="tabbtn2" data-stab="projects">공사관리</button>
-        <button type="button" class="tabbtn2" data-stab="kakao">카톡텍스트</button>
         <button type="button" class="tabbtn2" data-stab="appsettings">앱설정</button>
       </div>
 
-      <div id="stab-dashboard">
-        <div class="card">
-          <h3>📊 전체 공사 현황</h3>
-          <div class="section-note">공사별 누계 공정률, 오늘 작성 여부, 승인 대기 건수를 한눈에 확인합니다.</div>
-        </div>
-        <div id="dash-summary"></div>
-        <div id="dash-list"></div>
-        <div class="card">
-          <h3>👥 팀원별 활동 현황</h3>
-          <div class="section-note">이번 달 작업일보 작성 건수와 최근 작성일을 확인합니다. 오래 입력이 없는 팀원을 챙길 때 참고하세요.</div>
-          <div class="tblwrap"><table class="gridtable"><thead><tr><th>이름</th><th>역할</th><th>이번달 작성</th><th>최근 작성일</th></tr></thead><tbody id="dash-team-tbody"></tbody></table></div>
-        </div>
-      </div>
-
-      <div id="stab-payroll" hidden>
+      <div id="stab-payroll">
         <div class="card">
           <h3>💰 월별 급여 계산</h3>
           <div class="section-note">공사·월을 선택하면, 그 달 출역일지에 체크된 공수 합계 × 시급으로 예상 급여를 계산합니다. 이 화면은 관리자만 볼 수 있습니다.</div>
@@ -481,17 +527,19 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
       </div>
 
       <div id="stab-projects" hidden>
-        <div class="card">
+        <div class="card compact-card">
           <h3>공사(프로젝트) 추가</h3>
-          <div class="formrow"><label>공사명</label><input type="text" id="proj-name" placeholder="예: OO부대 OO소초 임시숙영시설 본공사"></div>
-          <div class="formrow"><label>업체명</label><input type="text" id="proj-company" placeholder="예: 경도건설"></div>
-          <div class="formrow">
-            <label>지역</label>
-            <span class="mono" style="min-width:auto;">강원도</span>
-            <select id="proj-city"></select>
+          <div class="formrow" style="flex-wrap:nowrap;">
+            <label style="min-width:36px;">공사명</label><input type="text" id="proj-name" placeholder="예: OO부대 본공사" style="flex:1.3; min-width:0;">
+            <label style="min-width:36px;">업체명</label><input type="text" id="proj-company" placeholder="예: 경도건설" style="flex:1; min-width:0;">
           </div>
-          <div class="formrow"><label>공사기간</label><input type="date" id="proj-start"><span style="min-width:auto;">~</span><input type="date" id="proj-end"></div>
-          <button type="button" class="btn btn-primary btn-block" id="btn-add-project">공사 추가</button>
+          <div class="formrow" style="flex-wrap:nowrap;">
+            <label style="min-width:36px;">지역</label><select id="proj-city" style="flex:1; min-width:0;"></select>
+            <label style="min-width:36px;">기간</label><input type="date" id="proj-start" style="flex:1; min-width:0; padding:6px 2px;"><span class="sep">~</span><input type="date" id="proj-end" style="flex:1; min-width:0; padding:6px 2px;">
+          </div>
+          <div class="formrow"><label style="display:flex; align-items:center; gap:5px; font-weight:400; min-width:auto;"><input type="checkbox" id="proj-attendance-enabled" checked> 출역일지 사용(이름별 명부로 관리)</label></div>
+          <div class="hint">일당제라 매일 인원이 바뀌면 체크를 끄세요. 끄면 출역일지 메뉴가 안 보이고, 작업일보의 "투입 인원"에서 역할별 명수만 바로 입력하게 됩니다.</div>
+          <button type="button" class="btn btn-primary" id="btn-add-project" style="margin-top:8px;">+ 공사 추가</button>
         </div>
         <div class="tabbtn2bar" style="margin-top:6px;">
           <button type="button" class="tabbtn2 active" data-projstab="active">진행 중 공사</button>
@@ -500,7 +548,8 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
 
         <div id="projstab-active">
           <div class="card">
-            <h3>진행 중인 공사</h3>
+            <h3>공사 목록</h3>
+            <div class="hint">종료를 눌러도 목록에서 사라지지 않고 취소선으로 표시만 됩니다. 완전히 없애려면 삭제를 누르세요.</div>
             <div class="tblwrap"><table class="gridtable"><thead><tr><th>공사명</th><th>업체명</th><th>지역</th><th>기간</th><th>상태</th><th></th></tr></thead><tbody id="projects-active-tbody"></tbody></table></div>
           </div>
         </div>
@@ -516,61 +565,61 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
         </div>
       </div>
 
-      <div id="stab-kakao" hidden>
-        <div class="card">
-          <h3>카톡 공유 텍스트 목록</h3>
-          <div class="formrow"><label>공사 선택</label><select id="kakao-list-project" style="flex:1;"></select></div>
-          <div class="hint" id="kakao-list-empty" hidden>이 공사에는 아직 저장된 작업일보가 없습니다.</div>
-          <div id="kakao-list-items"></div>
-        </div>
-      </div>
-
       <div id="stab-appsettings" hidden>
         <div class="card">
-          <h3>☎ 담당자 연락처</h3>
-          <div class="section-note">문제가 생겼을 때 바로 전화할 수 있도록, 화면 상단에 항상 표시됩니다.</div>
-          <div class="formrow"><label>담당자명</label><input type="text" id="contact-name" placeholder="예: 김담당"></div>
-          <div class="formrow"><label>전화번호</label><input type="tel" id="contact-phone" placeholder="예: 010-1234-5678"></div>
-          <button type="button" class="btn btn-primary btn-block" id="btn-save-contact">저장</button>
+          <h3 style="display:flex; align-items:center; justify-content:space-between; gap:6px;"><span>📋 항목 관리</span>
+            <span class="lockbtn-pair">
+              <button type="button" class="btn btn-small btn-primary" id="btn-itemmgr-edit">✏ 수정</button>
+              <button type="button" class="btn btn-small btn-dim" id="btn-itemmgr-save">💾 저장</button>
+            </span>
+          </h3>
+          <div class="section-note">이 공사에서 고를 수 있는 인부 종류·자재·장비 목록입니다. 공사마다 따로 관리되니, 다른 공사로 가면 그 공사의 목록이 보여요. "수정"을 눌러야 추가·수정·삭제가 되고, "저장"을 누르면 다시 잠겨서 실수로 안 건드려집니다.</div>
+
+          <div class="itemmgr-cols">
+            <div class="itemmgr-col">
+              <div class="itemmgr-col-title">인부 종류</div>
+              <div class="itemmgr-list" id="itemmgr-laborRoles"></div>
+              <div class="itemmgr-add-row"><input type="text" id="itemmgr-add-laborRoles" placeholder="예: 철근공"><button type="button" class="btn btn-small btn-primary" data-additem="laborRoles">+</button></div>
+            </div>
+            <div class="itemmgr-col">
+              <div class="itemmgr-col-title">자재</div>
+              <div class="itemmgr-list" id="itemmgr-materials"></div>
+              <div class="itemmgr-add-row"><input type="text" id="itemmgr-add-materials" placeholder="예: 철근(톤)"><button type="button" class="btn btn-small btn-primary" data-additem="materials">+</button></div>
+            </div>
+            <div class="itemmgr-col">
+              <div class="itemmgr-col-title">장비</div>
+              <div class="itemmgr-list" id="itemmgr-equipment"></div>
+              <div class="itemmgr-add-row"><input type="text" id="itemmgr-add-equipment" placeholder="예: 크레인 25톤"><button type="button" class="btn btn-small btn-primary" data-additem="equipment">+</button></div>
+            </div>
+          </div>
+
+          <div class="formrow" style="margin-top:12px;"><label style="display:flex; align-items:center; gap:5px; font-weight:400; min-width:auto;"><input type="checkbox" id="chk-show-examples" checked> 입력칸에 예시 문구 보이기</label></div>
         </div>
 
         <div class="card">
-          <h3>📁 백업 폴더 설정</h3>
+          <h3>📥 내보내기 &amp; 백업</h3>
+          <div class="section-note">지금 이 공사의 전체 기간을 엑셀 또는 JSON 파일로 받습니다. 엑셀은 ①통합계 ②카톡텍스트 ③작업일보(하루 한 장) 세 시트로 묶이고, JSON은 원본 데이터를 그대로 담습니다. 파일명은 공사명과 저장 날짜로 자동으로 붙습니다.</div>
+          <div class="formrow" style="flex-wrap:nowrap;">
+            <button type="button" class="btn btn-primary" id="btn-export-excel" style="flex:1;">📥 엑셀 만들기</button>
+            <button type="button" class="btn btn-primary" id="btn-export-json" style="flex:1;">🗂 JSON 만들기</button>
+          </div>
+          <div class="hint" id="export-meta" style="margin-top:8px;"></div>
+          <div style="border-top:1px solid var(--line-soft); margin:12px 0 10px;"></div>
           <div class="section-note" id="backup-folder-support-note"></div>
           <div class="hint" id="backup-folder-current" style="margin-bottom:8px;"></div>
-          <button type="button" class="btn btn-primary btn-block" id="btn-pick-backup-folder">폴더 선택</button>
-          <button type="button" class="btn btn-small" id="btn-clear-backup-folder" style="margin-top:6px;">폴더 설정 해제</button>
+          <div class="formrow" style="flex-wrap:nowrap;">
+            <button type="button" class="btn btn-primary" id="btn-pick-backup-folder" style="flex:1;">📁 폴더 선택</button>
+            <button type="button" class="btn btn-small" id="btn-clear-backup-folder" style="flex:none;">해제</button>
+          </div>
+          <div class="hint">폴더를 한 번 선택해두면, 이후 엑셀·JSON 저장이 모두 그 폴더 밑에 [연도]/[공사명] 순서로 자동 정리되어 저장됩니다.</div>
         </div>
 
-        <div class="card">
-          <h3>🌐 자동 날씨 안내</h3>
-          <div class="section-note">
-            작업일보의 날씨·최저/최고 기온은 <b>Open-Meteo</b>(오픈소스 기상 데이터 제공처, open-meteo.com)에서 공사 지역(강원도 시/군)의 좌표를 기준으로 자동으로 가져옵니다.<br>
-            오늘·미래 날짜는 예보 데이터를, 지난 날짜는 관측(과거) 데이터를 사용합니다. 자동으로 불러온 값은 필요하면 언제든 직접 수정할 수 있고, 인터넷 연결이 안 되거나 데이터가 없는 경우엔 수동 입력으로 대체됩니다.
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>💾 저장소 상태</h3>
-          <div class="hint" id="storage-mode-line" style="margin-bottom:8px;"></div>
-          <div class="section-note">
-            여러 사람이 동시에 같은 내용을 보려면 구글 <b>Apps Script</b>(완전 무료) 연결이 필요합니다.<br>
-            1) 지금 쓰는 구글시트 열기 → 확장 프로그램 → Apps Script<br>
-            2) 전달받은 스크립트 코드를 붙여넣고 저장<br>
-            3) 배포 → 새 배포 → 웹 앱 → 액세스 권한 "모든 사용자"로 배포<br>
-            4) 발급된 웹앱 주소를 index.html 안의 <span class="mono">APPS_SCRIPT_URL</span> 값에 넣고 다시 배포<br>
-            설정 전까지는 "이 브라우저에만 저장"되는 미리보기 모드로 동작합니다. (예전에 쓰던 SheetDB는 무료 한도가 월 500번뿐이라 유료 결제 없이는 계속 쓰기 어려워 Apps Script 방식으로 대체했습니다.)
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>⚠ 구글시트를 직접 열어서 고칠 때 주의사항</h3>
-          <div class="section-note">
-            앱이 아니라 <b>구글시트를 직접 열어서</b> PIN 번호나 숫자 값을 고칠 때는, 꼭 숫자 앞에 <b>작은따옴표(')</b>를 붙여서 입력해주세요.<br>
-            예) PIN이 <span class="mono">0000</span>이면 <span class="mono">'0000</span> 이렇게 입력<br><br>
-            이유: 구글시트 칸이 "숫자" 형식이면, 0으로 시작하는 값은 앞의 0이 자동으로 지워집니다(0000 → 0). 실제로 이 문제 때문에 관리자 PIN이 "0"으로 바뀌어 마스터 로그인이 안 됐던 적이 있어요(2026-09-19). 작은따옴표를 붙이면 글자로 인식되어 0이 지워지지 않습니다.<br><br>
-            앱 안의 "계정 추가" 화면으로 PIN을 등록/수정하는 경우에는 이 문제가 생기지 않으니, 가능하면 구글시트를 직접 고치기보다 앱 화면에서 등록하는 걸 추천드려요.
-          </div>
+        <div class="guide-box card">
+          <h3>📌 안내사항 모음</h3>
+          <div class="hint" id="storage-mode-line" style="margin-bottom:10px; font-weight:700;"></div>
+          <div class="guide-item"><b>🌐 자동 날씨</b> — 작업일보의 날씨·기온은 Open-Meteo에서 공사 지역 좌표를 기준으로 자동으로 가져옵니다(지난 날짜는 관측값, 오늘·미래는 예보값). 자동으로 불러온 값은 언제든 직접 고칠 수 있고, 인터넷이 안 되면 수동 입력으로 대체됩니다.</div>
+          <div class="guide-item"><b>💾 저장소</b> — 지금은 구글 Apps Script(무료)로 실시간 공유 저장 중이면 여러 사람이 같은 내용을 바로 볼 수 있습니다. 연결 전까지는 "이 브라우저에만 저장"되는 미리보기 모드로 동작하니, 위 상태 표시를 확인해주세요.</div>
+          <div class="guide-item"><b>⚠ 구글시트 직접 수정 시 주의</b> — 앱이 아니라 구글시트를 직접 열어서 PIN이나 숫자값을 고칠 때는 숫자 앞에 작은따옴표(')를 붙이세요 (예: PIN 0000 → '0000). 안 붙이면 앞자리 0이 지워집니다. 가능하면 구글시트를 직접 고치기보다 앱 화면(계정 추가 등)에서 등록하는 걸 추천드려요.</div>
         </div>
 
         <div class="card">
@@ -594,7 +643,7 @@ table.gridtable td .combo-cell input{flex:1; min-width:0; width:auto;}
 var GANGWON_CITIES = ["춘천시","원주시","강릉시","동해시","태백시","속초시","삼척시","홍천군","횡성군","영월군","평창군","정선군","철원군","화천군","양구군","인제군","고성군","양양군"];
 var WEATHER_OPTIONS = ["맑음","구름많음","흐림","흐리고 비","비","비온후 갬","눈","눈/비","황사","안개"];
 var LABOR_ROLES_DEFAULT = ["공사관리","직영반장","보통인부","형틀목공","설비공","배관공"];
-var MATERIAL_DEFAULT = ["혼합석(㎥)","레미콘(㎥)"];
+var MATERIAL_DEFAULT = ["혼합석(㎥)","레미콘(㎥)","철근(톤)","시멘트(포)","모래(㎥)","자갈(㎥)","잡석(㎥)","벽돌(장)","합판(매)","방수시트(m)","단열재(매)","아스콘(톤)"];
 var EQUIP_CATS = {"굴삭기":["02W","03W","06W"],"덤프":["5톤","15톤","24톤"],"기타":["지게차","레미콘 운반차량"]};
 var ROLE_LABEL = {writer:"입력자(팀장)", approver:"승인자(현장소장)", admin:"관리자"};
 
@@ -639,6 +688,23 @@ function dayOfWeekLabel(dateStr){
   var parts = dateStr.split("-").map(Number);
   var d = new Date(Date.UTC(parts[0], parts[1]-1, parts[2]));
   return ["일","월","화","수","목","금","토"][d.getUTCDay()]+"요일";
+}
+/* v15.2: 날짜 옆 요일 한 글자 표시(일=빨강/토=파랑/평일=검정) - 카톡텍스트·엑셀은 기존 dayOfWeekLabel() 그대로 사용 */
+function dayOfWeekShortColor(dateStr){
+  if(!dateStr) return {ch:"", color:""};
+  var parts = dateStr.split("-").map(Number);
+  var d = new Date(Date.UTC(parts[0], parts[1]-1, parts[2]));
+  var dow = d.getUTCDay();
+  var ch = ["일","월","화","수","목","금","토"][dow];
+  var color = dow===0 ? "#d64545" : (dow===6 ? "#2563c9" : "");
+  return {ch:ch, color:color};
+}
+function renderDowEl(elId, dateStr){
+  var el = document.getElementById(elId);
+  if(!el) return;
+  var info = dayOfWeekShortColor(dateStr);
+  el.textContent = info.ch;
+  el.style.color = info.color || "";
 }
 function monthKey(dateStr){ return dateStr ? dateStr.slice(0,7) : ""; }
 function nowIso(){ return new Date().toISOString(); }
@@ -722,6 +788,11 @@ function safeFolderName(name){
 function standardBackupFilename(projName, dateStr){
   var d = (dateStr||todayStr()).replace(/-/g,"");
   return "작업일지_"+safeFolderName(projName)+"_"+d+"_통합계.xlsx";
+}
+/* 작업일지_[공사명]_[YYYYMMDD]_데이터.json */
+function standardJsonBackupFilename(projName, dateStr){
+  var d = (dateStr||todayStr()).replace(/-/g,"");
+  return "작업일지_"+safeFolderName(projName)+"_"+d+"_데이터.json";
 }
 /* 폴더 핸들이 있으면 현장작업일지_백업/[연도]/[공사명]/ 밑에 저장하고, 없거나 실패하면
    기존 방식(클로드 downloads capability 우선, 그다음 앵커 다운로드)으로 대체.
@@ -877,7 +948,7 @@ function createDbAdapter(db){
    URL을 설정하지 않으면(placeholder 상태) 자동으로 "이 브라우저 저장" 모드로 동작해서
    기능 테스트는 그대로 가능하지만, 다른 사람과 실시간 공유는 되지 않음.
 -------------------------------------------------------------- */
-var SHEETDB_API_URL = "https://sheetdb.io/api/v1/z5drlzix37ee8";
+var SHEETDB_API_URL = "YOUR_SHEETDB_ID_HERE";
 function isSheetDBConfigured(){
   return SHEETDB_API_URL && SHEETDB_API_URL.indexOf("YOUR_SHEETDB_ID_HERE") === -1;
 }
@@ -900,7 +971,7 @@ function createSheetDBAdapter(){
         return rows.map(function(r){
           var out = Object.assign({}, r);
           // SheetDB는 모든 값을 문자열로 주므로, JSON으로 저장해둔 배열/객체 필드를 복원
-          ["projectIds","laborRows","materialRows","equipmentRows","weather","entries"].forEach(function(f){
+          ["projectIds","laborRows","materialRows","equipmentRows","weather","entries","laborRoles","materials","equipment"].forEach(function(f){
             if(typeof out[f] === "string" && out[f]){
               try{ out[f] = JSON.parse(out[f]); }catch(e){}
             }
@@ -912,7 +983,7 @@ function createSheetDBAdapter(){
     async save(col, id, item){
       var payload = Object.assign({}, item, {id:id});
       // 배열/객체 필드는 문자열로 직렬화해서 저장 (시트 셀은 텍스트라서)
-      ["projectIds","laborRows","materialRows","equipmentRows","weather","entries"].forEach(function(f){
+      ["projectIds","laborRows","materialRows","equipmentRows","weather","entries","laborRoles","materials","equipment"].forEach(function(f){
         if(payload[f] !== undefined && typeof payload[f] === "object"){
           payload[f] = JSON.stringify(payload[f]);
         }
@@ -959,7 +1030,7 @@ function createSheetDBAdapter(){
    않음(브라우저 기본값인 text/plain으로 전송되어야 프리플라이트 요청 없이
    바로 통과됨 - Apps Script 웹앱은 커스텀 헤더가 붙은 사전요청에 응답하지 못함).
 -------------------------------------------------------------- */
-var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9fDVuVELpxU_jQcl0XDjmrxC0m7PCksBtijUpkFUYeijyiognF5B3LfFD1sL-55ss/exec";
+var APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE";
 function isAppsScriptConfigured(){
   return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf("YOUR_APPS_SCRIPT_URL_HERE") === -1;
 }
@@ -972,7 +1043,7 @@ function createAppsScriptAdapter(){
     opts.signal = controller.signal;
     return fetch(url, opts).finally(function(){ clearTimeout(timer); });
   }
-  var JSON_FIELDS = ["projectIds","laborRows","materialRows","equipmentRows","weather","entries"];
+  var JSON_FIELDS = ["projectIds","laborRows","materialRows","equipmentRows","weather","entries","laborRoles","materials","equipment"];
   return {
     mode: "appsscript",
     async list(col){
@@ -1037,9 +1108,31 @@ var state = {
   currentDate:null,
   currentAttDate:null,
   editingLogId:null,
-  masterMode:false
+  masterMode:false,
+  itemLists:{ laborRoles:LABOR_ROLES_DEFAULT.slice(), materials:MATERIAL_DEFAULT.slice(), equipment:[] },
+  showExamples:true
 };
+/* v15.1: 인부 종류/자재/장비 목록은 공사(프로젝트)마다 따로 관리됨(사장님 요청 - 공사마다 쓰는
+   자재/장비가 다르므로). state.itemLists는 "지금 들어와 있는 공사"의 목록을 담는 캐시이고,
+   enterProject()에서 그 공사의 값으로 바꿔치기하고 saveItemLists()는 그 공사 레코드에 저장한다. */
+function defaultItemLists(){
+  var eq = [];
+  Object.keys(EQUIP_CATS).forEach(function(cat){ EQUIP_CATS[cat].forEach(function(spec){ eq.push(cat+" "+spec); }); });
+  return { laborRoles:LABOR_ROLES_DEFAULT.slice(), materials:MATERIAL_DEFAULT.slice(), equipment:eq };
+}
+state.itemLists = defaultItemLists();
 
+/* v14.1에서 Apps Script(구글시트)를 거치면 모든 값이 문자열로 바뀌어서 돌아온다.
+   boolean으로 저장한 값(true/false)이 "true"/"false" 문자열이 되면 기존의
+   "!==false" 비교가 항상 참이 되어버리는 문제가 있어, 불러온 직후 한 번 정리해준다. */
+function boolFlag(v, def){
+  if(v===undefined || v===null || v==="") return def;
+  if(typeof v === "boolean") return v;
+  var s = String(v).trim().toLowerCase();
+  if(s==="false" || s==="0") return false;
+  if(s==="true" || s==="1") return true;
+  return def;
+}
 function accountsById(id){ return state.accounts.find(function(a){ return a.id===id; }); }
 function projectById(id){ return state.projects.find(function(p){ return p.id===id; }); }
 function accountIsCurrentlyValid(acc){
@@ -1051,9 +1144,10 @@ function accountIsCurrentlyValid(acc){
 }
 function accessibleProjects(){
   if(!state.session) return [];
-  if(state.session.role === "admin") return state.projects.filter(function(p){ return p.active!==false; });
+  // v15: 관리자 혼자 쓰는 구조라 진행중/완료 구분 없이 전부 접근 가능(진입 화면에서만 구분해서 보여줌)
+  if(state.session.role === "admin") return state.projects.slice();
   var ids = state.session.projectIds || [];
-  return state.projects.filter(function(p){ return p.active!==false && ids.indexOf(p.id)>=0; });
+  return state.projects.filter(function(p){ return boolFlag(p.active,true)!==false && ids.indexOf(p.id)>=0; });
 }
 function logsForProject(pid){
   return state.logs.filter(function(l){ return l.projectId === pid; }).sort(function(a,b){ return a.date < b.date ? -1 : (a.date>b.date?1:0); });
@@ -1135,115 +1229,71 @@ async function fetchWeatherForDate(city, dateStr){
 }
 
 /* ============================================================
-   로그인 화면
+   v15: 공사명 카드 진입 화면 (PIN 로그인 폐지)
+   사장님 혼자 관리하는 구조로 바뀌어서, 이름/PIN을 고르는 대신
+   공사명 카드를 누르면 그 공사로 곧장 들어간다. 내부적으로는
+   기존 role 기반 코드(승인 등)를 그대로 쓰기 위해 관리자 계정으로
+   자동 로그인한다(화면에는 전혀 드러나지 않음).
 ============================================================ */
-var pinBuffer = "";
-var pinTargetAccounts = [];
-
-function renderLoginScreen(){
-  var isMaster = state.masterMode;
-  document.getElementById("master-badge").hidden = !isMaster;
-  document.getElementById("login-sub").textContent = isMaster ? "관리자 PIN 4자리를 입력하세요" : "이름을 선택해주세요";
-  var grid = document.getElementById("login-name-grid");
-  var pinArea = document.getElementById("login-pin-area");
-
-  if(isMaster){
-    grid.hidden = true;
-    pinArea.hidden = false;
-    pinTargetAccounts = state.accounts.filter(function(a){ return a.role==="admin" && accountIsCurrentlyValid(a); });
-    startPinEntry(pinTargetAccounts, "관리자 PIN 4자리를 입력하세요");
-    return;
+/* v15.2: 마지막에 보던 공사/탭을 기억해뒀다가, 다음에 열 때 바로 그 화면으로 들어감
+   (겉장/진입화면 없이 주소를 열면 바로 일보가 보이게) - 이 기기의 브라우저에만 저장 */
+var LAST_VIEW_KEY = "worklog_last_view_v1";
+function saveLastView(){
+  try{
+    var activeTabBtn = document.querySelector("#main-tabbar .tabbtn.active");
+    var tab = activeTabBtn ? activeTabBtn.getAttribute("data-maintab") : "report";
+    safeStorage.setItem(LAST_VIEW_KEY, JSON.stringify({projectId: state.currentProjectId, tab: tab}));
+  }catch(e){}
+}
+function loadLastView(){
+  try{ var raw = safeStorage.getItem(LAST_VIEW_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+}
+function getOrCreateAdminAccount(){
+  var admin = state.accounts.find(function(a){ return a.role==="admin" && accountIsCurrentlyValid(a); });
+  if(admin) return admin;
+  admin = state.accounts.find(function(a){ return a.role==="admin"; });
+  if(admin) return admin;
+  admin = {id:uid(), name:"관리자", role:"admin", pin:"0000", projectIds:[], startDate:null, endDate:null, active:true};
+  state.accounts.push(admin);
+  state.storage.save("accounts", admin.id, admin);
+  return admin;
+}
+function ensureAdminSession(){
+  if(!state.session || state.session.role!=="admin"){
+    var admin = getOrCreateAdminAccount();
+    state.session = {id:admin.id, name:admin.name, role:"admin", projectIds: admin.projectIds || []};
   }
-
-  grid.hidden = false;
-  pinArea.hidden = true;
-  var list = state.accounts.filter(function(a){ return a.role!=="admin" && accountIsCurrentlyValid(a); });
-  if(!list.length){
-    grid.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">등록된 계정이 없습니다.<br>관리자에게 계정 생성을 요청해주세요.</div>';
-    return;
+}
+/* v15.2: 공사를 바꿀 때마다(셀렉트 변경/공사관리에서 클릭) 공통으로 해야 하는 일들 -
+   그 공사의 항목목록으로 교체, 빠른입력 셀렉트/명부 직종 셀렉트 갱신, 출역모드 UI 갱신,
+   기본정보 줄 갱신, 마지막 화면 기억 */
+function setCurrentProject(pid){
+  state.currentProjectId = pid;
+  var proj = projectById(pid);
+  if(proj){
+    if(!proj.itemLists) proj.itemLists = defaultItemLists();
+    state.itemLists = proj.itemLists;
+  } else {
+    state.itemLists = defaultItemLists();
   }
-  grid.innerHTML = list.map(function(a){
-    return '<button type="button" class="name-pill" data-acc="'+a.id+'">'+esc(a.name)+'<span class="r">'+esc(ROLE_LABEL[a.role]||a.role)+'</span></button>';
-  }).join("");
-  grid.querySelectorAll(".name-pill").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var acc = accountsById(btn.getAttribute("data-acc"));
-      grid.hidden = true;
-      pinArea.hidden = false;
-      pinTargetAccounts = [acc];
-      startPinEntry([acc], acc.name+"님, PIN 4자리를 입력하세요");
-    });
-  });
+  populateQuickSelects();
+  populateRosterRoleSelect();
+  applyAttendanceModeUI();
+  updateProjectMetaLine();
+  saveLastView();
 }
-
-function startPinEntry(targets, title){
-  pinBuffer = "";
-  document.getElementById("pin-title").textContent = title;
-  renderPinDots();
-  var pad_ = document.getElementById("pin-pad");
-  var keys = ["1","2","3","4","5","6","7","8","9","","0","del"];
-  pad_.innerHTML = keys.map(function(k){
-    if(k==="") return '<div></div>';
-    if(k==="del") return '<button type="button" class="pin-key" data-k="del">⌫</button>';
-    return '<button type="button" class="pin-key" data-k="'+k+'">'+k+'</button>';
-  }).join("");
-  pad_.querySelectorAll(".pin-key").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var k = btn.getAttribute("data-k");
-      if(k==="del"){ pinBuffer = pinBuffer.slice(0,-1); renderPinDots(); return; }
-      if(pinBuffer.length>=4) return;
-      pinBuffer += k;
-      renderPinDots();
-      if(pinBuffer.length===4){ setTimeout(checkPin, 120); }
-    });
-  });
-}
-function renderPinDots(){
-  var dots = document.getElementById("pin-dots");
-  var html = "";
-  for(var i=0;i<4;i++){ html += '<span class="'+(i<pinBuffer.length?"filled":"")+'"></span>'; }
-  dots.innerHTML = html;
-}
-function checkPin(){
-  var match = pinTargetAccounts.find(function(a){ return a.pin === pinBuffer; });
-  if(match){ doLogin(match); return; }
-  showToast("PIN이 일치하지 않습니다");
-  pinBuffer = "";
-  renderPinDots();
-}
-document.getElementById("pin-back").addEventListener("click", function(){
-  pinBuffer = "";
-  if(state.masterMode){
-    location.hash = "";
-    state.masterMode = false;
-  }
-  renderLoginScreen();
-});
-
-function doLogin(acc){
-  state.session = {id:acc.id, name:acc.name, role:acc.role, projectIds: acc.projectIds || []};
-  document.getElementById("screen-login").hidden = true;
-  document.getElementById("screen-main").hidden = false;
-  document.getElementById("who-name").textContent = acc.name;
-  document.getElementById("tab-settings-btn").hidden = acc.role !== "admin";
-  document.getElementById("tab-export-btn").hidden = acc.role !== "admin"; // v14: 엑셀 내보내기는 마스터(관리자)만
-  renderContactBar();
-  bootMain();
-  switchMainTab(state.masterMode ? "settings" : "list");
+/* 설정>공사관리 목록에서 공사명을 클릭했을 때 - 그 공사로 바꾸고 작업일보 탭으로 이동 */
+function enterProject(pid){
+  ensureAdminSession();
+  var sel = document.getElementById("sel-project");
+  if(sel.value !== pid){ sel.value = pid; setCurrentProject(pid); }
+  switchMainTab("report");
 }
 /* 담당자 연락처 상단 고정 바는 화면 공간을 많이 차지해서 뺐음 - 전화번호는
    설정 > 앱설정에서 계속 확인/수정 가능함 (여기 값은 데이터로만 남겨둠) */
 function renderContactBar(){
   document.getElementById("contact-bar").hidden = true;
 }
-
-document.getElementById("btn-logout").addEventListener("click", function(){
-  state.session = null;
-  document.getElementById("screen-main").hidden = true;
-  document.getElementById("screen-login").hidden = false;
-  if(state.masterMode){ /* keep #master hash so they can log back in as admin */ }
-  renderLoginScreen();
-});
 
 /* ============================================================
    메인 탭 전환
@@ -1252,17 +1302,18 @@ function switchMainTab(tab){
   document.querySelectorAll("#main-tabbar .tabbtn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("data-maintab")===tab);
   });
-  document.getElementById("maintab-list").hidden = tab !== "list";
   document.getElementById("maintab-report").hidden = tab !== "report";
   document.getElementById("maintab-attendance").hidden = tab !== "attendance";
-  document.getElementById("maintab-export").hidden = tab !== "export";
+  document.getElementById("maintab-kakao").hidden = tab !== "kakao";
+  document.getElementById("maintab-dashboard").hidden = tab !== "dashboard";
   document.getElementById("maintab-settings").hidden = tab !== "settings";
-  document.getElementById("project-picker-card").hidden = (tab === "settings");
-  if(tab==="list") renderListTab();
+  if(tab==="report"){ renderListTab(); loadReportForDate(state.currentDate || todayStr()); }
   if(tab==="attendance") loadAttendanceForDate(state.currentAttDate || todayStr());
-  if(tab==="export") renderExportTab();
+  if(tab==="kakao") renderKakaoListTab();
+  if(tab==="dashboard") renderDashboardTab();
   if(tab==="settings") refreshSettingsTab();
   updateProjectMetaLine();
+  saveLastView();
   window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
 }
 document.querySelectorAll("#main-tabbar .tabbtn").forEach(function(btn){
@@ -1273,15 +1324,11 @@ document.querySelectorAll(".tabbtn2[data-stab]").forEach(function(btn){
     document.querySelectorAll(".tabbtn2[data-stab]").forEach(function(b){ b.classList.remove("active"); });
     btn.classList.add("active");
     var tab = btn.getAttribute("data-stab");
-    document.getElementById("stab-dashboard").hidden = tab !== "dashboard";
     document.getElementById("stab-payroll").hidden = tab !== "payroll";
     document.getElementById("stab-accounts").hidden = tab !== "accounts";
     document.getElementById("stab-projects").hidden = tab !== "projects";
-    document.getElementById("stab-kakao").hidden = tab !== "kakao";
     document.getElementById("stab-appsettings").hidden = tab !== "appsettings";
-    if(tab === "dashboard") renderDashboardTab();
     if(tab === "payroll") renderPayrollTab();
-    if(tab === "kakao") renderKakaoListTab();
     if(tab === "appsettings") renderAppSettingsTab();
   });
 });
@@ -1289,44 +1336,27 @@ document.querySelectorAll(".tabbtn2[data-stab]").forEach(function(btn){
 /* ============================================================
    프로젝트 선택
 ============================================================ */
+/* v15.2: 이 셀렉트가 상단바에 항상 떠 있는 유일한 공사 선택 지점. 종료된 공사도
+   "(종료) 이름"으로 같이 나오게 해서(공사관리 탭과 같은 원칙) 완전히 안 사라지게 함 */
 function renderProjectSelect(){
   var sel = document.getElementById("sel-project");
-  var pillRow = document.getElementById("project-pill-row");
   var list = accessibleProjects();
   var prev = state.currentProjectId;
-  sel.innerHTML = list.map(function(p){ return '<option value="'+p.id+'">'+esc(p.name)+'</option>'; }).join("");
+  sel.innerHTML = list.map(function(p){
+    var ended = boolFlag(p.active,true)===false;
+    return '<option value="'+p.id+'">'+(ended?"(종료) ":"")+esc(p.name)+'</option>';
+  }).join("");
   if(!list.length){
     state.currentProjectId = null;
-    pillRow.innerHTML = "";
     document.getElementById("project-meta-line").textContent = "등록된 공사가 없습니다. 설정에서 추가해주세요.";
     return;
   }
   if(prev && list.some(function(p){ return p.id===prev; })){ sel.value = prev; }
-  else { sel.value = list[0].id; state.currentProjectId = list[0].id; }
+  else { sel.value = list[0].id; }
   state.currentProjectId = sel.value;
-  renderProjectPills(list);
+  var proj = projectById(state.currentProjectId);
+  if(proj){ if(!proj.itemLists) proj.itemLists = defaultItemLists(); state.itemLists = proj.itemLists; }
   updateProjectMetaLine();
-}
-function renderProjectPills(list){
-  var pillRow = document.getElementById("project-pill-row");
-  list = list || accessibleProjects();
-  if(list.length <= 1){
-    // 담당 공사가 하나뿐이면 고를 필요 없이 바로 그 공사로 들어감. 작업명은 여기서만
-    // 굵게 한 번 보여주고, 아래 기본정보 줄에서는 절대 다시 반복하지 않는다(중복 표시 방지)
-    pillRow.innerHTML = list.length ? ('<div style="font-weight:700; font-size:14px;">📍 '+esc(list[0].name)+'</div>') : "";
-    return;
-  }
-  pillRow.innerHTML = list.map(function(p){
-    var active = p.id === state.currentProjectId;
-    return '<button type="button" class="btn btn-small'+(active?" btn-primary":"")+'" data-pickproj="'+p.id+'">'+esc(p.name)+'</button>';
-  }).join("");
-  pillRow.querySelectorAll("[data-pickproj]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var id = btn.getAttribute("data-pickproj");
-      document.getElementById("sel-project").value = id;
-      document.getElementById("sel-project").dispatchEvent(new Event("change"));
-    });
-  });
 }
 /* 기본정보 한 줄: 건설사 (+ 작업일보 탭에서는 작성자까지). 작업명은 바로 위 공사 선택
    줄(핀 아이콘)에 이미 굵게 나오므로 여기서는 절대 다시 넣지 않는다 - 예전에 작업명이
@@ -1339,7 +1369,7 @@ function updateProjectMetaLine(){
   if(!p){ el.textContent = "등록된 공사가 없습니다. 설정에서 추가해주세요."; return; }
   var parts = [];
   var activeTabBtn = document.querySelector("#main-tabbar .tabbtn.active");
-  var tab = activeTabBtn ? activeTabBtn.getAttribute("data-maintab") : "list";
+  var tab = activeTabBtn ? activeTabBtn.getAttribute("data-maintab") : "report";
   /* 작업일보 탭은 폼 안에 "□ 업체명" 줄이 따로 있으니 여기서 업체명을 또 넣지 않음(중복 방지) */
   if(tab !== "report" && p.company) parts.push(esc(p.company));
   if(tab === "report" && reportDraft){
@@ -1350,16 +1380,11 @@ function updateProjectMetaLine(){
   }
   el.innerHTML = parts.join(" | ");
 }
+/* v15.2: 공사를 바꾸면 지금 보고 있는 탭 그대로, 그 공사 내용으로 바로 바뀜(화면 이동 없음) */
 document.getElementById("sel-project").addEventListener("change", function(){
-  state.currentProjectId = this.value;
-  updateProjectMetaLine();
-  renderProjectPills();
-  var activeTab = document.querySelector("#main-tabbar .tabbtn.active");
-  var tab = activeTab ? activeTab.getAttribute("data-maintab") : "list";
-  if(tab==="list") renderListTab();
-  if(tab==="report") loadReportForDate(state.currentDate || todayStr());
-  if(tab==="attendance") loadAttendanceForDate(state.currentAttDate || todayStr());
-  if(tab==="export") renderExportTab();
+  setCurrentProject(this.value);
+  var activeTabBtn = document.querySelector("#main-tabbar .tabbtn.active");
+  switchMainTab(activeTabBtn ? activeTabBtn.getAttribute("data-maintab") : "report");
 });
 
 /* ============================================================
@@ -1370,6 +1395,11 @@ function canDeleteLog(log){
   if(state.session.role==="admin" || state.session.role==="approver") return true;
   return log.createdBy === state.session.id && log.approvalStatus !== "approved";
 }
+document.getElementById("btn-toggle-list").addEventListener("click", function(){
+  var box = document.getElementById("list-rows");
+  box.hidden = !box.hidden;
+  this.textContent = box.hidden ? "목록 보기" : "목록 숨기기";
+});
 function renderListTab(){
   var box = document.getElementById("list-rows");
   var pid = state.currentProjectId;
@@ -1377,16 +1407,13 @@ function renderListTab(){
   var logs = logsForProject(pid).slice().reverse();
   if(!logs.length){ box.innerHTML = '<div class="empty-note">아직 작성된 작업일보가 없습니다.<br>‘작업일보’ 탭에서 오늘 일지를 작성해보세요.</div>'; return; }
   box.innerHTML = logs.map(function(l){
-    var badge = l.approvalStatus==="approved" ? '<span class="badge badge-approved">승인완료</span>'
-      : l.approvalStatus==="submitted" ? '<span class="badge badge-submitted">승인대기</span>'
-      : '<span class="badge badge-draft">작성중</span>';
     var author = accountsById(l.createdBy);
     var del = canDeleteLog(l) ? '<button type="button" class="btn btn-small btn-icon btn-danger" data-del="'+l.id+'" title="삭제">🗑</button>' : '';
     return '<div class="listrow" data-open="'+l.id+'">'
       + '<div class="lr-line1">'+fmtDate(l.date)+' '+dayOfWeekLabel(l.date)+'</div>'
       + '<div class="lr-line2">'
         + '<div class="lr-meta">'+esc(l.weather && l.weather.cond || "-")+' · 실시 '+num(l.progressActual)+'% · 작성 '+esc(author?author.name:"-")+'</div>'
-        + '<div class="lr-acts">'+badge+'<button type="button" class="btn btn-small btn-icon" data-open-btn title="열기">↗</button>'+del+'</div>'
+        + '<div class="lr-acts"><button type="button" class="btn btn-small btn-icon" data-open-btn title="열기">↗</button>'+del+'</div>'
       + '</div>'
       + '</div>';
   }).join("");
@@ -1446,7 +1473,8 @@ function blankReport(pid, dateStr){
     weather:{cond:"맑음", lo:"", hi:"", note:""},
     approvalStatus:"draft", approvedBy:null, approvedAt:null,
     todayWork:"", tomorrowWork:"",
-    laborRows: fromAtt || [{role:LABOR_ROLES_DEFAULT[0], today:0}],
+    laborRows: fromAtt || [{role:state.itemLists.laborRoles[0]||"", today:0}],
+    laborFromAttendance: !!fromAtt,
     progressActual:0,
     materialText:"", equipmentText:"", vehicleNote:"",
     instructions:"", memo:"",
@@ -1458,9 +1486,9 @@ function blankReport(pid, dateStr){
 
 function renderWeatherDisplay(){
   var w = reportDraft.weather || {};
-  var lo = (w.lo===""||w.lo==null) ? "-" : w.lo;
-  var hi = (w.hi===""||w.hi==null) ? "-" : w.hi;
-  document.getElementById("rep-weather-display").textContent = (w.cond||"-")+" 최저"+lo+"℃ 최고"+hi+"℃";
+  /* 사장님 요청: 입력화면에는 날씨(맑음/흐림 등)만 보여주고 최저/최고 기온은 안 보이게 함
+     (기온 값 자체는 그대로 저장되어 카톡 텍스트/엑셀에는 계속 들어감) */
+  document.getElementById("rep-weather-display").textContent = w.cond || "-";
   document.getElementById("rep-weather-note").value = w.note || "";
 }
 
@@ -1490,7 +1518,7 @@ function loadReportForDate(dateStr){
   var pid = state.currentProjectId;
   state.currentDate = dateStr;
   document.getElementById("rep-date").value = dateStr;
-  document.getElementById("rep-dow").textContent = dayOfWeekLabel(dateStr);
+  renderDowEl("rep-dow", dateStr);
   document.getElementById("prev-log-preview").hidden = true; // v14: 날짜/공사 바뀌면 어제 참고보기 닫기(오래된 정보 노출 방지)
   renderProjectDisplayLines();
   if(!pid){ return; }
@@ -1535,7 +1563,7 @@ async function autoFillWeatherIfNeeded(alreadyExisting){
     reportDraft.weather.lo = w.lo;
     reportDraft.weather.hi = w.hi;
     renderWeatherDisplay();
-    hint.textContent = "🌐 "+proj.city+" 자동 조회됨 (다를 경우 아래 칸에 적어주세요)";
+    hint.textContent = "";
     renderKakaoText();
   } else {
     hint.textContent = "⚠ 자동 조회 실패 - 아래 칸에 직접 적어주세요";
@@ -1554,17 +1582,9 @@ document.getElementById("btn-sync-attendance").addEventListener("click", functio
   var rows = laborRowsFromAttendance(reportDraft.projectId, reportDraft.date);
   if(!rows){ showToast("이 날짜에 출역 체크된 인원이 없습니다"); return; }
   reportDraft.laborRows = rows;
+  reportDraft.laborFromAttendance = true;
   renderLaborRows();
   showToast("출역일지 기준으로 다시 채웠습니다");
-});
-document.getElementById("btn-pull-prev-plan").addEventListener("click", function(){
-  if(!reportDraft) return;
-  var prev = getPrevLog(reportDraft.projectId, reportDraft.date);
-  if(!prev || !(prev.tomorrowWork||"").trim()){ showToast("불러올 어제 계획이 없습니다"); return; }
-  reportDraft.todayWork = prev.tomorrowWork;
-  document.getElementById("rep-today-work").value = prev.tomorrowWork;
-  renderKakaoText();
-  showToast("어제 계획을 불러왔습니다");
 });
 /* v14: 오늘 입력하면서 어제 전체 내용을 빠르게 참고할 수 있도록 토글로 보여줌(수정은 안 됨, 보기 전용) */
 document.getElementById("btn-toggle-prev-log").addEventListener("click", function(){
@@ -1608,32 +1628,11 @@ function applyEditLock(){
   document.getElementById("lock-note").hidden = editable;
 }
 
-/* "작성중"(초안) 상태는 기본값이라 굳이 배지로 안 보여주고, 승인대기/승인완료일 때만 표시 */
+/* v15.2: 혼자 관리하는 구조라 승인 절차 화면을 없앰(승인완료/승인대기 배지, "승인하기" 버튼,
+   "(승인: 관리자)" 문구 전부 삭제). 함수는 다른 곳에서 호출해도 안전하도록 빈 함수로 남겨둠 */
 function renderApprovalLine(){
   var el = document.getElementById("approval-line");
-  if(!reportDraft){ el.innerHTML=""; return; }
-  var badge = reportDraft.approvalStatus==="approved" ? '<span class="badge badge-approved">승인완료</span>'
-    : reportDraft.approvalStatus==="submitted" ? '<span class="badge badge-submitted">승인대기</span>'
-    : '';
-  var html = badge;
-  var canApprove = state.session && (state.session.role==="approver" || state.session.role==="admin");
-  if(canApprove && reportDraft.approvalStatus!=="approved" && getLog(reportDraft.projectId, reportDraft.date)){
-    html += ' &nbsp; <button type="button" class="btn btn-small btn-primary" id="btn-approve-inline">승인하기</button>';
-  }
-  if(reportDraft.approvalStatus==="approved"){
-    html += " (승인: "+esc(accountsById(reportDraft.approvedBy)?accountsById(reportDraft.approvedBy).name:"-")+")";
-  }
-  el.innerHTML = html;
-  var ap = document.getElementById("btn-approve-inline");
-  if(ap) ap.addEventListener("click", async function(){
-    reportDraft.approvalStatus = "approved";
-    reportDraft.approvedBy = state.session.id;
-    reportDraft.approvedAt = nowIso();
-    await persistReport();
-    showToast("승인했습니다");
-    renderApprovalLine();
-    applyEditLock();
-  });
+  if(el) el.innerHTML = "";
 }
 
 /* ---- 작업상황(직공): 자주쓰는 직종 셀렉트로 빠르게 채우고, 텍스트로 직접 수정/입력도 가능 ---- */
@@ -1641,7 +1640,7 @@ function renderLaborRows(){
   var tbody = document.getElementById("labor-rows");
   var pid = reportDraft.projectId, dateStr = reportDraft.date;
   var roleOptionsHtml = '<option value="">▾</option>'
-    + LABOR_ROLES_DEFAULT.map(function(r){ return '<option value="'+esc(r)+'">'+esc(r)+'</option>'; }).join("")
+    + state.itemLists.laborRoles.map(function(r){ return '<option value="'+esc(r)+'">'+esc(r)+'</option>'; }).join("")
     + '<option value="__custom__">직접입력</option>';
   tbody.innerHTML = reportDraft.laborRows.map(function(row, idx){
     return '<tr data-idx="'+idx+'">'
@@ -1671,10 +1670,21 @@ function renderLaborRows(){
       this.value = "";
     });
     var rm = tr.querySelector("[data-rm]");
-    if(rm) rm.addEventListener("click", function(){ reportDraft.laborRows.splice(idx,1); renderLaborRows(); });
+    if(rm) rm.addEventListener("click", function(){ reportDraft.laborRows.splice(idx,1); reportDraft.laborFromAttendance = false; renderLaborRows(); });
   });
   renderLaborSums();
   renderKakaoText();
+  renderLaborSourceBadge();
+}
+/* v15.2: 투입 인원이 출역일지에서 자동으로 채워진 건지 한눈에 보이게 배지 표시(사장님 요청) */
+function renderLaborSourceBadge(){
+  var el = document.getElementById("labor-section-hint");
+  if(!el) return;
+  if(reportDraft && reportDraft.laborFromAttendance){
+    el.innerHTML = '<span class="badge badge-approved">🔗 출역연동</span>';
+  } else {
+    el.textContent = "출역일지에서 불러오세요";
+  }
 }
 function renderLaborSums(){
   var todaySum=0, cumSum=0;
@@ -1688,6 +1698,7 @@ function renderLaborSums(){
 }
 document.getElementById("btn-add-labor").addEventListener("click", function(){
   reportDraft.laborRows.push({role:"", today:0});
+  reportDraft.laborFromAttendance = false;
   renderLaborRows();
 });
 
@@ -1704,12 +1715,10 @@ document.getElementById("rep-actual").addEventListener("input", function(){ repo
    입력칸 텍스트 뒤에 콤마로 이어붙여줌. 실제 저장되는 값은 입력칸의 텍스트 한 줄뿐 ---- */
 function populateQuickSelects(){
   var equipSel = document.getElementById("rep-equip-quick");
-  var equipNames = [];
-  Object.keys(EQUIP_CATS).forEach(function(cat){ EQUIP_CATS[cat].forEach(function(spec){ equipNames.push(cat+" "+spec); }); });
-  equipSel.innerHTML = '<option value="">▾빠른입력</option>' + equipNames.map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+'</option>'; }).join("");
+  equipSel.innerHTML = '<option value="">▾빠른입력</option>' + state.itemLists.equipment.map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+'</option>'; }).join("");
 
   var matSel = document.getElementById("rep-mat-quick");
-  matSel.innerHTML = '<option value="">▾빠른입력</option>' + MATERIAL_DEFAULT.map(function(m){ return '<option value="'+esc(m)+'">'+esc(m)+'</option>'; }).join("");
+  matSel.innerHTML = '<option value="">▾빠른입력</option>' + state.itemLists.materials.map(function(m){ return '<option value="'+esc(m)+'">'+esc(m)+'</option>'; }).join("");
 }
 function appendToTextField(inputId, text){
   var input = document.getElementById(inputId);
@@ -1823,12 +1832,17 @@ async function persistReport(){
 }
 document.getElementById("btn-save-report").addEventListener("click", async function(){
   if(!reportDraft || !reportDraft.projectId){ showToast("공사를 먼저 선택해주세요"); return; }
+  var btn = this;
+  var origLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "저장 중...";
   try{
     await persistReport();
     document.getElementById("save-meta").textContent = "마지막 저장: "+new Date(reportDraft.updatedAt).toLocaleString("ko-KR");
-    showToast("저장했습니다");
+    showToast("✅ 저장했습니다");
     renderLaborRows(); renderApprovalLine();
   }catch(e){ reportError(e); showToast("저장 중 오류가 발생했습니다"); }
+  finally{ btn.disabled = false; btn.textContent = origLabel; }
 });
 
 /* ============================================================
@@ -1846,12 +1860,37 @@ function blankAttendance(pid, dateStr){
     updatedAt: nowIso()
   };
 }
+/* v15.2: 비/눈 오는 날 화면이 잘 안보여 실수로 숫자를 건드리는 걸 막기 위한 잠금.
+   날짜를 열 때마다 항상 잠긴 상태로 시작 - 체크박스만 바로 가능하고, "수정"을 눌러야
+   공수·이름을 고치거나 인원을 추가/삭제할 수 있다 */
+var attLocked = true;
+function attendanceSummaryLine(pid){
+  var roster = rosterForProject(pid);
+  if(!roster.length) return "";
+  var roleOrder = (state.itemLists.laborRoles||[]);
+  var groups = [];
+  roster.forEach(function(r){
+    var role = r.role || "미지정";
+    var g = groups.find(function(g){ return g.role===role; });
+    if(!g){ g = {role:role, count:0}; groups.push(g); }
+    g.count++;
+  });
+  groups.sort(function(a,b){
+    var ia = roleOrder.indexOf(a.role); if(ia===-1) ia = 999;
+    var ib = roleOrder.indexOf(b.role); if(ib===-1) ib = 999;
+    if(ia!==ib) return ia-ib;
+    return a.role.localeCompare(b.role);
+  });
+  return "총인원 " + groups.map(function(g){ return esc(g.role)+" "+g.count+"명"; }).join(' · ') + " · 총 "+roster.length+"명";
+}
 function loadAttendanceForDate(dateStr){
   var pid = state.currentProjectId;
   state.currentAttDate = dateStr;
   document.getElementById("att-date").value = dateStr;
-  document.getElementById("att-dow").textContent = dayOfWeekLabel(dateStr);
-  if(!pid){ document.getElementById("attendance-rows").innerHTML = ""; return; }
+  renderDowEl("att-dow", dateStr);
+  document.getElementById("att-summary-top").innerHTML = attendanceSummaryLine(pid);
+  attLocked = true;
+  if(!pid){ document.getElementById("attendance-rows").innerHTML = ""; applyAttLockUI(); return; }
   var existing = getAttendanceLog(pid, dateStr);
   var roster = rosterForProject(pid);
   if(existing){
@@ -1868,25 +1907,78 @@ function loadAttendanceForDate(dateStr){
   renderAttendanceRows();
   document.getElementById("attendance-save-meta").textContent = existing ? ("마지막 저장: "+new Date(existing.updatedAt).toLocaleString("ko-KR")) : "아직 저장되지 않았습니다";
 }
+function applyAttLockUI(){
+  var editBtn = document.getElementById("btn-att-edit");
+  var saveBtn = document.getElementById("btn-att-save");
+  if(editBtn && saveBtn){
+    editBtn.classList.toggle("btn-primary", !attLocked);
+    editBtn.classList.toggle("btn-dim", attLocked);
+    saveBtn.classList.toggle("btn-primary", attLocked);
+    saveBtn.classList.toggle("btn-dim", !attLocked);
+  }
+  var addWrap = document.getElementById("roster-add-wrap");
+  if(addWrap) addWrap.style.display = attLocked ? "none" : "";
+}
+document.getElementById("btn-att-edit").addEventListener("click", function(){
+  if(!attLocked) return;
+  attLocked = false;
+  renderAttendanceRows();
+  showToast("✏ 수정할 수 있습니다. 저장을 누르면 다시 잠깁니다");
+});
+document.getElementById("btn-att-save").addEventListener("click", function(){
+  if(attLocked) return;
+  attLocked = true;
+  renderAttendanceRows();
+  showToast("🔒 잠갔습니다. 이제 체크만 할 수 있습니다");
+});
+/* v15.2: 역할별 폴더(그룹)로 묶어서 표시. 전체 연속 넘버링, 이름 바로 수정,
+   삭제는 확인창 없이 즉시 처리. 체크박스는 잠긴 상태에서도 항상 가능하고,
+   공수·이름·추가·삭제는 "수정"을 눌러야만 가능 */
 function renderAttendanceRows(){
   var tbody = document.getElementById("attendance-rows");
   var pid = state.currentProjectId;
   var roster = rosterForProject(pid);
+  applyAttLockUI();
+  document.getElementById("att-summary-top").innerHTML = attendanceSummaryLine(pid);
   if(!roster.length){
-    tbody.innerHTML = '<tr><td colspan="5" class="left" style="color:var(--muted);">등록된 인원이 없습니다. 아래 "+ 인원 추가"로 등록해주세요.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="left" style="color:var(--muted);">등록된 인원이 없습니다. "수정"을 누르고 아래 "+ 추가"로 등록해주세요.</td></tr>';
     document.getElementById("att-present-badge").textContent = "0/0";
     return;
   }
-  tbody.innerHTML = roster.map(function(r){
-    var e = attDraft.entries.find(function(x){ return x.rosterId===r.id; }) || {present:false, hours:1};
-    return '<tr data-rid="'+r.id+'">'
-      + '<td class="col-check"><input type="checkbox" data-f="present" '+(e.present?"checked":"")+' style="width:18px;height:18px;"></td>'
-      + '<td class="left">'+esc(r.name)+'</td>'
-      + '<td class="left">'+esc(r.role||"-")+'</td>'
-      + '<td><input type="number" inputmode="decimal" step="0.5" class="mono" data-f="hours" value="'+(e.hours!=null?e.hours:1)+'" style="text-align:center;"></td>'
-      + '<td class="col-x"><button type="button" class="btn btn-x btn-danger" data-rm-roster="'+r.id+'">✕</button></td>'
-      + '</tr>';
-  }).join("");
+  var roleOrder = (state.itemLists.laborRoles||[]);
+  var groups = []; // [{role, members:[roster...]}]
+  roster.forEach(function(r){
+    var role = r.role || "미지정";
+    var g = groups.find(function(g){ return g.role===role; });
+    if(!g){ g = {role:role, members:[]}; groups.push(g); }
+    g.members.push(r);
+  });
+  groups.sort(function(a,b){
+    var ia = roleOrder.indexOf(a.role); if(ia===-1) ia = 999;
+    var ib = roleOrder.indexOf(b.role); if(ib===-1) ib = 999;
+    if(ia!==ib) return ia-ib;
+    return a.role.localeCompare(b.role);
+  });
+
+  var rowNum = 0;
+  var html = "";
+  groups.forEach(function(g, gi){
+    html += '<tr class="attgroup-head" data-gi="'+gi+'" style="cursor:pointer; background:var(--card2, #f0f1ea);">'
+      + '<td colspan="5" style="text-align:left; font-weight:700;"><span class="attgroup-arrow">▾</span> '+esc(g.role)+' <span style="font-weight:400; color:var(--muted);">('+g.members.length+'명)</span></td></tr>';
+    g.members.forEach(function(r){
+      rowNum++;
+      var e = attDraft.entries.find(function(x){ return x.rosterId===r.id; }) || {present:false, hours:1};
+      html += '<tr data-rid="'+r.id+'" data-gi-row="'+gi+'">'
+        + '<td class="mono" style="text-align:center; color:var(--muted);">'+rowNum+'</td>'
+        + '<td class="col-check"><input type="checkbox" data-f="present" '+(e.present?"checked":"")+' style="width:18px;height:18px;"></td>'
+        + '<td class="left"><input type="text" data-f="name" value="'+esc(r.name)+'"'+(attLocked?' readonly style="width:100%; border:none; background:transparent; font:inherit; padding:3px 2px; color:var(--muted);"':' style="width:100%; border:none; background:transparent; font:inherit; padding:3px 2px;"')+'></td>'
+        + '<td><input type="number" inputmode="decimal" step="0.5" class="mono" data-f="hours" value="'+(e.hours!=null?e.hours:1)+'" style="text-align:center;"'+(attLocked?" disabled":"")+'></td>'
+        + '<td class="col-x">'+(attLocked?'':'<button type="button" class="btn btn-x btn-danger" data-rm-roster="'+r.id+'">✕</button>')+'</td>'
+        + '</tr>';
+    });
+  });
+  tbody.innerHTML = html;
+
   tbody.querySelectorAll("tr[data-rid]").forEach(function(tr){
     var rid = tr.getAttribute("data-rid");
     var entry = attDraft.entries.find(function(x){ return x.rosterId===rid; });
@@ -1895,15 +1987,33 @@ function renderAttendanceRows(){
       if(entry.present && !entry.hours) entry.hours = 1;
       updatePresentBadge();
     });
-    tr.querySelector('[data-f="hours"]').addEventListener("input", function(){ entry.hours = num(this.value); });
+    tr.querySelector('[data-f="hours"]').addEventListener("input", function(){ if(attLocked) return; entry.hours = num(this.value); });
+    tr.querySelector('[data-f="name"]').addEventListener("change", async function(){
+      if(attLocked) return;
+      var r = rosterById(rid);
+      var newName = this.value.trim();
+      if(!newName){ this.value = r.name; return; }
+      if(newName === r.name) return;
+      r.name = newName;
+      await state.storage.save("attendanceRoster", r.id, r);
+      showToast("이름을 수정했습니다");
+    });
     var rm = tr.querySelector("[data-rm-roster]");
     if(rm) rm.addEventListener("click", async function(){
-      if(!confirm("명부에서 이 인원을 삭제할까요? (지난 출석 기록은 남아있습니다)")) return;
       var r = rosterById(rid);
       r.active = false;
       await state.storage.save("attendanceRoster", r.id, r);
       renderAttendanceRows();
       showToast("명부에서 삭제했습니다");
+    });
+  });
+  tbody.querySelectorAll(".attgroup-head").forEach(function(headTr){
+    headTr.addEventListener("click", function(){
+      var gi = headTr.getAttribute("data-gi");
+      var arrow = headTr.querySelector(".attgroup-arrow");
+      var willCollapse = arrow.textContent === "▾";
+      arrow.textContent = willCollapse ? "▸" : "▾";
+      tbody.querySelectorAll('tr[data-gi-row="'+gi+'"]').forEach(function(rowTr){ rowTr.hidden = willCollapse; });
     });
   });
   updatePresentBadge();
@@ -1919,7 +2029,7 @@ document.getElementById("att-date").addEventListener("change", function(){ loadA
    선택으로 바꿔서 PC/모바일 어디서든 똑같이 동작하게 함 */
 function populateRosterRoleSelect(){
   var sel = document.getElementById("roster-new-role");
-  sel.innerHTML = LABOR_ROLES_DEFAULT.map(function(r){ return '<option value="'+esc(r)+'">'+esc(r)+'</option>'; }).join("")
+  sel.innerHTML = state.itemLists.laborRoles.map(function(r){ return '<option value="'+esc(r)+'">'+esc(r)+'</option>'; }).join("")
     + '<option value="__custom__">직접입력</option>';
 }
 populateRosterRoleSelect();
@@ -1944,20 +2054,25 @@ document.getElementById("btn-add-roster").addEventListener("click", async functi
   nameInput.value = "";
   document.getElementById("roster-new-role-custom").value = "";
   document.getElementById("roster-new-role-custom-wrap").hidden = true;
-  roleSel.value = LABOR_ROLES_DEFAULT[0];
+  roleSel.value = state.itemLists.laborRoles[0]||"";
   showToast("명부에 추가했습니다");
   nameInput.focus();
 });
 document.getElementById("btn-save-attendance").addEventListener("click", async function(){
   if(!attDraft || !attDraft.projectId){ showToast("공사를 먼저 선택해주세요"); return; }
+  var btn = this;
+  var origLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "저장 중...";
   try{
     attDraft.updatedAt = nowIso();
     await state.storage.save("attendanceLogs", attDraft.id, attDraft);
     var idx = state.attendanceLogs.findIndex(function(a){ return a.id===attDraft.id; });
     if(idx>=0) state.attendanceLogs[idx] = clone(attDraft); else state.attendanceLogs.push(clone(attDraft));
     document.getElementById("attendance-save-meta").textContent = "마지막 저장: "+new Date(attDraft.updatedAt).toLocaleString("ko-KR");
-    showToast("출석을 저장했습니다");
+    showToast("✅ 출역을 저장했습니다");
   }catch(e){ reportError(e); showToast("저장 중 오류가 발생했습니다"); }
+  finally{ btn.disabled = false; btn.textContent = origLabel; }
 });
 
 /* ============================================================
@@ -2171,6 +2286,26 @@ async function exportProjectExcel(pid){
   var fname = standardBackupFilename(built.proj.name, todayStr());
   return await saveWorkbookBlob(blob, fname, built.proj.name);
 }
+/* v15.2: 이 공사의 원본 데이터(작업일보, 출역명부, 출역기록, 항목목록)를 통째로 JSON 파일로
+   백업. 엑셀과 같은 [연도]/[공사명] 폴더 밑에 같이 저장되어, 나중에 필요하면 원본 그대로 복원 가능 */
+function buildProjectJsonBackup(pid){
+  var proj = projectById(pid);
+  if(!proj) return null;
+  return {
+    exportedAt: nowIso(),
+    project: proj,
+    logs: logsForProject(pid),
+    attendanceRoster: rosterForProject(pid),
+    attendanceLogs: attendanceLogsForProject(pid)
+  };
+}
+async function exportProjectJson(pid){
+  var data = buildProjectJsonBackup(pid);
+  if(!data) return null;
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  var fname = standardJsonBackupFilename(data.project.name, todayStr());
+  return await saveWorkbookBlob(blob, fname, data.project.name);
+}
 
 document.getElementById("btn-export-excel").addEventListener("click", async function(){
   var pid = state.currentProjectId;
@@ -2185,23 +2320,31 @@ document.getElementById("btn-export-excel").addEventListener("click", async func
     else showToast("엑셀 파일을 다운로드했습니다");
   }catch(e){ reportError(e); showToast("내보내기 중 오류가 발생했습니다"); }
 });
+document.getElementById("btn-export-json").addEventListener("click", async function(){
+  var pid = state.currentProjectId;
+  var proj = projectById(pid);
+  if(!proj){ showToast("공사를 먼저 선택해주세요"); return; }
+  try{
+    var result = await exportProjectJson(pid);
+    if(!result){ showToast("내보낼 데이터가 없습니다"); return; }
+    if(result.mode==="folder") showToast("백업 폴더에 JSON을 저장했습니다");
+    else showToast("JSON 파일을 다운로드했습니다");
+  }catch(e){ reportError(e); showToast("내보내기 중 오류가 발생했습니다"); }
+});
 
 /* ============================================================
    설정 탭 - 계정관리
 ============================================================ */
 function refreshSettingsTab(){
-  renderDashboardTab();
   renderAccountProjectPicker();
   renderAccountsTable();
   renderProjectCitySelect();
   renderProjectsTable();
-  renderKakaoListProjectSelect();
   renderAppSettingsTab();
   document.getElementById("acc-start").value = todayStr();
 }
 
-/* ---- 설정 탭 - 현황판(대시보드): 공사별 누계 공정률/오늘 작성여부/승인대기 건수 ---- */
-/* v14: 요약 통계 + 진행중 공사 카드(완료 공사는 공사관리>완료된 공사 탭에서 확인) + 팀원별 활동현황 */
+/* ---- 현황판(v15: 지금 들어와 있는 공사 하나만 보여줌) ---- */
 function statBlock(label, val){
   return '<div style="flex:1; min-width:84px; text-align:center;">'
     + '<div class="hint">'+esc(label)+'</div>'
@@ -2211,46 +2354,46 @@ function statBlock(label, val){
 function renderDashboardSummary(){
   var box = document.getElementById("dash-summary");
   if(!box) return;
-  var activeCount = state.projects.filter(function(p){ return p.active!==false; }).length;
-  var doneCount = state.projects.filter(function(p){ return p.active===false; }).length;
+  var pid = state.currentProjectId;
+  var logs = logsForProject(pid);
   var mKey = monthKey(todayStr());
-  var thisMonthLogs = state.logs.filter(function(l){ return monthKey(l.date)===mKey; }).length;
+  var thisMonthLogs = logs.filter(function(l){ return monthKey(l.date)===mKey; }).length;
   box.innerHTML = '<div class="card" style="display:flex; gap:10px; flex-wrap:wrap;">'
-    + statBlock("진행 중 공사", activeCount+"건")
-    + statBlock("완료된 공사", doneCount+"건")
+    + statBlock("작성된 일보", logs.length+"건")
     + statBlock("이번달 작성", thisMonthLogs+"건")
     + '</div>';
 }
 function renderDashboardProjectList(){
   var box = document.getElementById("dash-list");
   if(!box) return;
-  var list = state.projects.filter(function(p){ return p.active!==false; });
-  if(!list.length){ box.innerHTML = '<div class="empty-note">진행 중인 공사가 없습니다. 완료된 공사는 공사관리 > 완료된 공사 탭에서 확인하세요.</div>'; return; }
+  var pid = state.currentProjectId;
+  var p = projectById(pid);
+  if(!p){ box.innerHTML = '<div class="empty-note">공사 정보를 불러올 수 없습니다.</div>'; return; }
+  var logs = logsForProject(p.id);
+  var cumProgress = logs.reduce(function(sum,l){ return sum + num(l.progressActual); }, 0);
+  if(cumProgress > 100) cumProgress = 100;
+  if(cumProgress < 0) cumProgress = 0;
   var today = todayStr();
-  box.innerHTML = list.map(function(p){
-    var logs = logsForProject(p.id);
-    var cumProgress = logs.reduce(function(sum,l){ return sum + num(l.progressActual); }, 0);
-    if(cumProgress > 100) cumProgress = 100;
-    if(cumProgress < 0) cumProgress = 0;
-    var pendingCount = logs.filter(function(l){ return l.approvalStatus === "submitted"; }).length;
-    var wroteToday = logs.some(function(l){ return l.date === today; });
-    var todayBadge = wroteToday ? '<span class="badge badge-approved">오늘 작성완료</span>' : '<span class="badge badge-submitted">오늘 미작성</span>';
-    var pendingBadge = pendingCount>0 ? '<span class="badge badge-submitted">승인대기 '+pendingCount+'건</span>' : '<span class="badge badge-draft">승인대기 없음</span>';
-    var period = fmtDate(p.periodStart)+" ~ "+fmtDate(p.periodEnd);
+  var wroteToday = logs.some(function(l){ return l.date === today; });
+  var todayBadge = wroteToday ? '<span class="badge badge-approved">오늘 작성완료</span>' : '<span class="badge badge-submitted">오늘 미작성</span>';
+  var period = fmtDate(p.periodStart)+" ~ "+fmtDate(p.periodEnd);
+  var statusBadge = boolFlag(p.active,true)===false ? '<span class="badge badge-draft">종료</span>' : '<span class="badge badge-approved">진행중</span>';
+  var laborNote = "출역일지 사용 안 함";
+  if(boolFlag(p.attendanceEnabled,true)!==false){
     var attLogs = attendanceLogsForProject(p.id).slice().sort(function(a,b){ return a.date<b.date?-1:(a.date>b.date?1:0); });
     var latestAtt = attLogs.length ? attLogs[attLogs.length-1] : null;
     var presentCount = latestAtt ? latestAtt.entries.filter(function(e){ return e.present; }).length : 0;
-    var laborNote = latestAtt ? (fmtDate(latestAtt.date)+" 출역 "+presentCount+"명") : "출역 기록 없음";
-    return '<div class="card">'
-      + '<h3>'+esc(p.name)+' <span class="badge badge-approved">진행중</span></h3>'
-      + '<div class="hint" style="margin-bottom:7px;">'+esc(p.company||"-")+' · 강원도 '+esc(p.city||"-")+' · 진행기간 '+esc(period)+' · '+esc(laborNote)+'</div>'
-      + '<div style="display:flex; align-items:center; gap:8px; margin-bottom:7px;">'
-        + '<div class="dash-bar-track"><div class="dash-bar-fill" style="width:'+cumProgress+'%;"></div></div>'
-        + '<b class="mono" style="min-width:38px; text-align:right;">'+cumProgress+'%</b>'
-      + '</div>'
-      + '<div style="display:flex; gap:6px; flex-wrap:wrap;">'+todayBadge+pendingBadge+'</div>'
-      + '</div>';
-  }).join("");
+    laborNote = latestAtt ? (fmtDate(latestAtt.date)+" 출역 "+presentCount+"명") : "출역 기록 없음";
+  }
+  box.innerHTML = '<div class="card">'
+    + '<h3>'+esc(p.name)+' '+statusBadge+'</h3>'
+    + '<div class="hint" style="margin-bottom:7px;">'+esc(p.company||"-")+' · 강원도 '+esc(p.city||"-")+' · 진행기간 '+esc(period)+' · '+esc(laborNote)+'</div>'
+    + '<div style="display:flex; align-items:center; gap:8px; margin-bottom:7px;">'
+      + '<div class="dash-bar-track"><div class="dash-bar-fill" style="width:'+cumProgress+'%;"></div></div>'
+      + '<b class="mono" style="min-width:38px; text-align:right;">'+cumProgress+'%</b>'
+    + '</div>'
+    + '<div style="display:flex; gap:6px; flex-wrap:wrap;">'+todayBadge+'</div>'
+    + '</div>';
 }
 function renderDashboardTeamActivity(){
   var tbody = document.getElementById("dash-team-tbody");
@@ -2298,7 +2441,6 @@ document.getElementById("btn-add-account").addEventListener("click", async funct
   document.getElementById("acc-end").value = "";
   showToast("계정을 추가했습니다");
   refreshSettingsTab();
-  renderLoginScreen();
 });
 function renderAccountsTable(){
   var tbody = document.getElementById("accounts-tbody");
@@ -2315,30 +2457,40 @@ function renderAccountsTable(){
       a.active = a.active===false ? true : false;
       await state.storage.save("accounts", a.id, a);
       renderAccountsTable();
-      renderLoginScreen();
     });
   });
 }
 
 /* ---- 설정 탭 - 공사관리 ---- */
 function renderProjectCitySelect(){
-  var sel = document.getElementById("proj-city");
-  if(!sel.options.length){
-    sel.innerHTML = GANGWON_CITIES.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join("");
-  }
+  ["proj-city"].forEach(function(id){
+    var sel = document.getElementById(id);
+    if(sel && !sel.options.length){
+      sel.innerHTML = GANGWON_CITIES.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join("");
+    }
+  });
+}
+renderProjectCitySelect();
+async function createProjectRecord(fields){
+  var proj = {id:uid(), name:fields.name, company:fields.company||"", city:fields.city||"", periodStart:fields.start||null, periodEnd:fields.end||null, active:true, attendanceEnabled:fields.attendanceEnabled!==false, itemLists:defaultItemLists()};
+  await state.storage.save("projects", proj.id, proj);
+  state.projects.push(proj);
+  return proj;
 }
 document.getElementById("btn-add-project").addEventListener("click", async function(){
   var name = document.getElementById("proj-name").value.trim();
-  var company = document.getElementById("proj-company").value.trim();
-  var city = document.getElementById("proj-city").value;
-  var start = document.getElementById("proj-start").value;
-  var end = document.getElementById("proj-end").value;
   if(!name){ showToast("공사명을 입력해주세요"); return; }
-  var proj = {id:uid(), name:name, company:company, city:city, periodStart:start||null, periodEnd:end||null, active:true};
-  await state.storage.save("projects", proj.id, proj);
-  state.projects.push(proj);
+  await createProjectRecord({
+    name:name,
+    company: document.getElementById("proj-company").value.trim(),
+    city: document.getElementById("proj-city").value,
+    start: document.getElementById("proj-start").value,
+    end: document.getElementById("proj-end").value,
+    attendanceEnabled: document.getElementById("proj-attendance-enabled").checked
+  });
   document.getElementById("proj-name").value = "";
   document.getElementById("proj-company").value = "";
+  document.getElementById("proj-attendance-enabled").checked = true;
   showToast("공사를 추가했습니다");
   refreshSettingsTab();
   renderProjectSelect();
@@ -2346,20 +2498,31 @@ document.getElementById("btn-add-project").addEventListener("click", async funct
 /* v14: 진행중/완료 공사를 별도 탭으로 분리. 종료 버튼을 누르면 확인 후 자동 백업까지 실행하고,
    완료 탭에서는 검색 + 재개 + 재백업이 가능하다 */
 function projectRowHtml(p, isDone){
-  var status = p.active===false ? '<span class="badge badge-draft">종료</span>' : '<span class="badge badge-approved">진행중</span>';
-  var btnLabel = isDone ? "재개" : "종료";
-  return "<tr><td style='text-align:left;'>"+esc(p.name)+"</td><td>"+esc(p.company||"-")+"</td><td>강원도 "+esc(p.city||"-")+"</td><td style='font-size:10.5px;'>"+fmtDate(p.periodStart)+"~"+fmtDate(p.periodEnd)+"</td><td>"+status+"</td>"
+  var ended = boolFlag(p.active,true)===false;
+  var status = ended ? '<span class="badge badge-draft">종료</span>' : '<span class="badge badge-approved">진행중</span>';
+  var btnLabel = ended ? "재개" : "종료";
+  var attOn = boolFlag(p.attendanceEnabled,true)!==false;
+  var strike = ended ? "text-decoration:line-through; opacity:0.55;" : "";
+  return "<tr style='"+strike+"'><td style='text-align:left;"+strike+"'><a href='#' data-enter-proj='"+p.id+"' style='color:var(--accent); font-weight:700; text-decoration:"+(ended?"line-through":"underline")+";'>"+esc(p.name)+"</a></td><td>"+esc(p.company||"-")+"</td><td>강원도 "+esc(p.city||"-")+"</td><td style='font-size:10.5px;'>"+fmtDate(p.periodStart)+"~"+fmtDate(p.periodEnd)+"</td><td>"+status+"</td>"
     + "<td style='white-space:nowrap;'><button type='button' class='btn btn-small' data-toggle-proj='"+p.id+"'>"+btnLabel+"</button>"
+    + " <button type='button' class='btn btn-small' data-toggle-att='"+p.id+"' title='출역일지 사용 여부'>출역"+(attOn?"켬":"끔")+"</button>"
     + (isDone ? " <button type='button' class='btn btn-small' data-rebackup-proj='"+p.id+"'>📥 재백업</button>" : "")
+    + " <button type='button' class='btn btn-small btn-danger' data-delete-proj='"+p.id+"'>🗑 삭제</button>"
     + "</td></tr>";
 }
 function wireProjectToggleButtons(tbody){
+  tbody.querySelectorAll("[data-enter-proj]").forEach(function(a){
+    a.addEventListener("click", function(ev){
+      ev.preventDefault();
+      enterProject(a.getAttribute("data-enter-proj"));
+    });
+  });
   tbody.querySelectorAll("[data-toggle-proj]").forEach(function(btn){
     btn.addEventListener("click", async function(){
       var p = projectById(btn.getAttribute("data-toggle-proj"));
-      var willClose = p.active !== false;
+      var willClose = boolFlag(p.active,true) !== false;
       if(willClose){
-        if(!confirm("["+p.name+"] 공사를 종료할까요?\n종료하면 엑셀로 자동 백업된 뒤 완료된 공사 목록으로 이동하고, 팀원 화면에서는 더 이상 보이지 않습니다.")) return;
+        if(!confirm("["+p.name+"] 공사를 종료할까요?\n종료하면 엑셀로 자동 백업되고 목록에서 취소선으로 표시됩니다. 목록에서는 사라지지 않으며, 완전히 없애려면 삭제를 눌러야 합니다.")) return;
         p.active = false;
         await state.storage.save("projects", p.id, p);
         try{
@@ -2376,13 +2539,56 @@ function wireProjectToggleButtons(tbody){
       }
       renderProjectsTable();
       renderProjectSelect();
-      renderDashboardTab();
+      if(state.currentProjectId) renderDashboardTab();
+    });
+  });
+  tbody.querySelectorAll("[data-toggle-att]").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var p = projectById(btn.getAttribute("data-toggle-att"));
+      var wasOn = boolFlag(p.attendanceEnabled,true) !== false;
+      p.attendanceEnabled = !wasOn;
+      await state.storage.save("projects", p.id, p);
+      showToast(wasOn ? "이 공사는 출역일지를 사용 안 함으로 바꿨습니다" : "이 공사는 출역일지를 사용함으로 바꿨습니다");
+      renderProjectsTable();
+      if(p.id === state.currentProjectId) applyAttendanceModeUI();
+    });
+  });
+  tbody.querySelectorAll("[data-delete-proj]").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var pid = btn.getAttribute("data-delete-proj");
+      var p = projectById(pid);
+      if(!p) return;
+      if(!confirm("["+p.name+"] 공사를 완전히 삭제할까요?\n이 공사의 작업일보, 출역명부, 출역기록이 모두 함께 삭제되며 되돌릴 수 없습니다.")) return;
+      if(!confirm("정말로 삭제할까요? 삭제 전에 엑셀 백업을 먼저 받아두는 것을 권장합니다.\n그래도 삭제하시겠습니까?")) return;
+      try{
+        var logIds = state.logs.filter(function(l){ return l.projectId===pid; }).map(function(l){ return l.id; });
+        var rosterIds = state.attendanceRoster.filter(function(r){ return r.projectId===pid; }).map(function(r){ return r.id; });
+        var attLogIds = state.attendanceLogs.filter(function(a){ return a.projectId===pid; }).map(function(a){ return a.id; });
+        for(var i=0;i<logIds.length;i++) await state.storage.remove("logs", logIds[i]);
+        for(var j=0;j<rosterIds.length;j++) await state.storage.remove("attendanceRoster", rosterIds[j]);
+        for(var k=0;k<attLogIds.length;k++) await state.storage.remove("attendanceLogs", attLogIds[k]);
+        await state.storage.remove("projects", pid);
+        state.logs = state.logs.filter(function(l){ return l.projectId!==pid; });
+        state.attendanceRoster = state.attendanceRoster.filter(function(r){ return r.projectId!==pid; });
+        state.attendanceLogs = state.attendanceLogs.filter(function(a){ return a.projectId!==pid; });
+        state.projects = state.projects.filter(function(x){ return x.id!==pid; });
+        if(state.currentProjectId === pid){ state.currentProjectId = null; }
+        renderProjectsTable();
+        renderProjectSelect();
+        populateQuickSelects();
+        populateRosterRoleSelect();
+        applyAttendanceModeUI();
+        var activeTabBtn = document.querySelector("#main-tabbar .tabbtn.active");
+        switchMainTab(activeTabBtn ? activeTabBtn.getAttribute("data-maintab") : "settings");
+        showToast("공사를 삭제했습니다");
+      }catch(e){ reportError(e); showToast("삭제 중 오류가 발생했습니다"); }
     });
   });
 }
 function renderActiveProjectsTable(){
   var tbody = document.getElementById("projects-active-tbody");
-  var list = state.projects.filter(function(p){ return p.active!==false; });
+  /* v15.2: 종료해도 목록에서 사라지지 않고 취소선으로만 표시 - 전체 공사를 다 보여줌 */
+  var list = state.projects;
   tbody.innerHTML = list.map(function(p){ return projectRowHtml(p,false); }).join("");
   wireProjectToggleButtons(tbody);
 }
@@ -2391,7 +2597,7 @@ function renderDoneProjectsTable(){
   var emptyNote = document.getElementById("done-projects-empty");
   var summary = document.getElementById("done-projects-summary");
   var q = (document.getElementById("done-project-search").value||"").trim();
-  var all = state.projects.filter(function(p){ return p.active===false; });
+  var all = state.projects.filter(function(p){ return boolFlag(p.active,true)===false; });
   summary.textContent = "총 "+all.length+"건 완료";
   var list = q ? all.filter(function(p){ return p.name.indexOf(q)>=0; }) : all;
   if(!list.length){ tbody.innerHTML=""; emptyNote.hidden=false; return; }
@@ -2424,38 +2630,128 @@ document.querySelectorAll('[data-projstab]').forEach(function(btn){
   });
 });
 
-/* ---- 설정 탭 - 카톡텍스트 목록 ---- */
-function renderKakaoListProjectSelect(){
-  var sel = document.getElementById("kakao-list-project");
-  var prev = sel.value;
-  sel.innerHTML = state.projects.map(function(p){ return '<option value="'+p.id+'">'+esc(p.name)+'</option>'; }).join("");
-  if(prev && state.projects.some(function(p){ return p.id===prev; })) sel.value = prev;
-}
+/* ---- 카톡목록 (v15: 지금 들어와 있는 공사만) ---- */
 function renderKakaoListTab(){
-  renderKakaoListProjectSelect();
   renderKakaoListItems();
 }
+/* v15.2: 잘못 저장된 항목을 고치거나 지울 수 있게 수정/삭제 버튼 추가,
+   날짜를 놓쳤을 때 바로 추가하러 갈 수 있는 버튼 추가,
+   월간(지난 달들)/주간(이번 달의 지난 주들) 폴더로 접어서 최근 1주일만 바로 보이게 함 */
+function kakaoIsoMonday(dateStr){
+  var d = new Date(dateStr+"T00:00:00");
+  var day = d.getDay();
+  var diff = (day===0 ? -6 : 1-day);
+  d.setDate(d.getDate()+diff);
+  return d;
+}
+function kakaoFmtMD(d){ return (d.getMonth()+1)+"."+d.getDate(); }
 function renderKakaoListItems(){
-  var pid = document.getElementById("kakao-list-project").value;
+  var pid = state.currentProjectId;
   var box = document.getElementById("kakao-list-items");
   var emptyNote = document.getElementById("kakao-list-empty");
+  var addRowHtml = '<div class="formrow" style="margin-bottom:8px;">'
+    + '<button type="button" class="btn btn-small btn-primary" id="btn-kakao-add-date">+ 날짜 추가</button>'
+    + '</div>'
+    + '<div id="kakao-add-date-row" hidden style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">'
+    + '<input type="date" id="kakao-add-date-input" value="'+todayStr()+'" style="flex:1;">'
+    + '<button type="button" class="btn btn-small btn-primary" id="btn-kakao-add-date-go">작성하러 가기</button>'
+    + '</div>';
   if(!pid){ box.innerHTML = ""; emptyNote.hidden = false; return; }
   var proj = projectById(pid);
-  var logs = logsForProject(pid).slice().reverse();
-  if(logs.length===0){ box.innerHTML = ""; emptyNote.hidden = false; return; }
+  var logs = logsForProject(pid).slice().sort(function(a,b){ return a.date < b.date ? 1 : -1; });
+  if(logs.length===0){
+    box.innerHTML = addRowHtml;
+    wireKakaoAddDateRow();
+    emptyNote.hidden = false;
+    return;
+  }
   emptyNote.hidden = true;
-  box.innerHTML = logs.map(function(l){
+
+  function logItemHtml(l){
     var txt = buildKakaoText(l, proj);
     var dp = l.date.split("-");
     var label = dp[0]+"."+dp[1]+"."+dp[2]+" ("+dayOfWeekLabel(l.date)+")";
     return '<div class="card" style="margin-bottom:8px; background:var(--card2, var(--card));">'
-      + '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">'
+      + '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px; flex-wrap:wrap;">'
       + '<b style="font-size:12.5px;">'+esc(label)+'</b>'
+      + '<span style="display:flex; gap:4px;">'
+      + '<button type="button" class="btn btn-small" data-edit-kakao-log="'+l.id+'">✏ 수정</button>'
       + '<button type="button" class="btn btn-small btn-primary" data-copy-kakao-log="'+l.id+'">📋 복사</button>'
+      + '<button type="button" class="btn btn-small btn-danger" data-del-kakao-log="'+l.id+'">🗑 삭제</button>'
+      + '</span>'
       + '</div>'
       + '<pre class="mono" style="white-space:pre-wrap; font-size:11.5px; margin:0;">'+esc(txt)+'</pre>'
       + '</div>';
-  }).join("");
+  }
+
+  // 월별로 묶기 (최신 달이 항상 먼저 옴)
+  var months = [];
+  logs.forEach(function(l){
+    var key = l.date.slice(0,7);
+    var m = months.filter(function(m){ return m.key===key; })[0];
+    if(!m){ m = {key:key, label:l.date.slice(0,4)+"년 "+parseInt(l.date.slice(5,7),10)+"월", logs:[]}; months.push(m); }
+    m.logs.push(l);
+  });
+
+  var html = addRowHtml;
+  months.forEach(function(m, mi){
+    if(mi!==0){
+      html += '<div class="kakaogroup-head" data-mi="'+mi+'" style="cursor:pointer; background:var(--card2,#f0f1ea); border-radius:8px; padding:8px 10px; margin-bottom:6px; font-weight:700;">'
+        + '<span class="kakaogroup-arrow">▸</span> '+esc(m.label)+' <span style="font-weight:400; color:var(--muted);">('+m.logs.length+'건)</span></div>'
+        + '<div class="kakaogroup-body" data-mi-body="'+mi+'" hidden>'
+        + m.logs.map(logItemHtml).join("")
+        + '</div>';
+      return;
+    }
+    // 최근 달은 주 단위로 다시 나눠서, 최근 1주일만 바로 보이게 함
+    var weeks = [];
+    m.logs.forEach(function(l){
+      var mon = kakaoIsoMonday(l.date);
+      var wk = mon.getFullYear()+"-"+(mon.getMonth()+1)+"-"+mon.getDate();
+      var w = weeks.filter(function(w){ return w.key===wk; })[0];
+      if(!w){
+        var sun = new Date(mon); sun.setDate(sun.getDate()+6);
+        w = {key:wk, label:kakaoFmtMD(mon)+"~"+kakaoFmtMD(sun), logs:[]};
+        weeks.push(w);
+      }
+      w.logs.push(l);
+    });
+    html += '<div style="font-weight:700; font-size:12.5px; margin:4px 0 6px;">'+esc(m.label)+' <span style="font-weight:400; color:var(--muted);">('+m.logs.length+'건)</span></div>';
+    weeks.forEach(function(w, wi){
+      if(wi===0){
+        html += '<div class="section-note" style="margin:2px 0 4px;">'+esc(w.label)+' · 최근 1주일</div>'
+          + w.logs.map(logItemHtml).join("");
+      } else {
+        html += '<div class="kakaogroup-head" data-wk="'+w.key+'" style="cursor:pointer; background:var(--card2,#f0f1ea); border-radius:8px; padding:8px 10px; margin-bottom:6px; font-weight:700;">'
+          + '<span class="kakaogroup-arrow">▸</span> '+esc(w.label)+' <span style="font-weight:400; color:var(--muted);">('+w.logs.length+'건)</span></div>'
+          + '<div class="kakaogroup-body" data-wk-body="'+w.key+'" hidden>'
+          + w.logs.map(logItemHtml).join("")
+          + '</div>';
+      }
+    });
+  });
+
+  box.innerHTML = html;
+  wireKakaoAddDateRow();
+
+  box.querySelectorAll(".kakaogroup-head[data-mi]").forEach(function(head){
+    head.addEventListener("click", function(){
+      var mi = head.getAttribute("data-mi");
+      var body = box.querySelector('.kakaogroup-body[data-mi-body="'+mi+'"]');
+      var arrow = head.querySelector(".kakaogroup-arrow");
+      body.hidden = !body.hidden;
+      arrow.textContent = body.hidden ? "▸" : "▾";
+    });
+  });
+  box.querySelectorAll(".kakaogroup-head[data-wk]").forEach(function(head){
+    head.addEventListener("click", function(){
+      var wk = head.getAttribute("data-wk");
+      var body = box.querySelector('.kakaogroup-body[data-wk-body="'+wk+'"]');
+      var arrow = head.querySelector(".kakaogroup-arrow");
+      body.hidden = !body.hidden;
+      arrow.textContent = body.hidden ? "▸" : "▾";
+    });
+  });
   box.querySelectorAll("[data-copy-kakao-log]").forEach(function(btn){
     btn.addEventListener("click", async function(){
       var log = state.logs.find(function(l){ return l.id === btn.getAttribute("data-copy-kakao-log"); });
@@ -2469,9 +2765,43 @@ function renderKakaoListItems(){
       }
     });
   });
+  box.querySelectorAll("[data-edit-kakao-log]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var log = state.logs.find(function(l){ return l.id === btn.getAttribute("data-edit-kakao-log"); });
+      if(!log) return;
+      switchMainTab("report");
+      loadReportForDate(log.date);
+    });
+  });
+  box.querySelectorAll("[data-del-kakao-log]").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var lid = btn.getAttribute("data-del-kakao-log");
+      var log = state.logs.find(function(l){ return l.id === lid; });
+      if(!log) return;
+      if(!confirm(fmtDate(log.date)+" 작업일보를 삭제할까요?\n삭제하면 되돌릴 수 없습니다.")) return;
+      try{
+        await state.storage.remove("logs", lid);
+        state.logs = state.logs.filter(function(l){ return l.id!==lid; });
+        renderKakaoListItems();
+        showToast("삭제했습니다");
+      }catch(e){ reportError(e); showToast("삭제 중 오류가 발생했습니다"); }
+    });
+  });
 }
-document.getElementById("kakao-list-project").addEventListener("change", renderKakaoListItems);
-
+function wireKakaoAddDateRow(){
+  var toggleBtn = document.getElementById("btn-kakao-add-date");
+  if(toggleBtn) toggleBtn.addEventListener("click", function(){
+    var row = document.getElementById("kakao-add-date-row");
+    row.hidden = !row.hidden;
+  });
+  var goBtn = document.getElementById("btn-kakao-add-date-go");
+  if(goBtn) goBtn.addEventListener("click", function(){
+    var d = document.getElementById("kakao-add-date-input").value;
+    if(!d){ showToast("날짜를 선택해주세요"); return; }
+    switchMainTab("report");
+    loadReportForDate(d);
+  });
+}
 /* ---- 설정 탭 - 앱설정(담당자 연락처 / 날씨 안내 / 저장소 상태 / 초기화) ---- */
 function storageModeLabel(){
   var mode = state.storage ? state.storage.mode : "local";
@@ -2479,13 +2809,142 @@ function storageModeLabel(){
   if(mode === "appsscript") return "🟢 구글 Apps Script로 실시간 공유 저장 중 (무료)";
   if(mode === "sheetdb") return "🟡 SheetDB로 실시간 공유 저장 중 (유료 서비스 - 무료 한도 초과 시 저장 안 됨)";
   if(!safeStorage.available) return "🔴 이 화면은 저장이 막힌 미리보기 환경입니다 (예: 메신저 안에서 파일 미리보기) - 지금 입력한 내용은 이 화면을 닫으면 사라집니다. 크롬/사파리 같은 실제 브라우저에서 파일을 열어주세요";
-  return "🟡 이 브라우저에만 저장 중 (미리보기 모드) - 다른 사람과 공유하려면 SheetDB 연결이 필요합니다";
+  return "🟡 이 브라우저에만 저장 중 (미리보기 모드) - 다른 사람과 공유하려면 구글 Apps Script 연결이 필요합니다";
 }
 function renderAppSettingsTab(){
-  document.getElementById("contact-name").value = state.contact ? (state.contact.name||"") : "";
-  document.getElementById("contact-phone").value = state.contact ? (state.contact.phone||"") : "";
   document.getElementById("storage-mode-line").textContent = storageModeLabel();
   refreshBackupFolderUI();
+  document.getElementById("chk-show-examples").checked = state.showExamples !== false;
+  renderAllItemLists();
+  renderExportTab();
+}
+
+/* ============================================================
+   v15: 항목 관리 (인부 종류/자재/장비 추가·수정·삭제) + 예제 보기 토글
+============================================================ */
+var ITEM_LIST_KEYS = ["laborRoles","materials","equipment"];
+/* v15.2: 실수로 손이 닿아 항목이 바뀌는 일이 없도록, 기본은 잠금 상태.
+   "수정"을 눌러야 추가/수정/삭제가 가능해지고, "저장(잠그기)"을 누르면 다시 잠긴다 */
+var itemMgrLocked = true;
+async function saveItemLists(){
+  /* v15.1: 공사(프로젝트)별로 저장 - 지금 들어와 있는 공사 레코드에 붙여서 저장한다 */
+  var proj = projectById(state.currentProjectId);
+  if(!proj) return;
+  proj.itemLists = {
+    laborRoles: state.itemLists.laborRoles,
+    materials: state.itemLists.materials,
+    equipment: state.itemLists.equipment
+  };
+  await state.storage.save("projects", proj.id, proj);
+}
+async function saveAppPrefs(){
+  await state.storage.save("settings", "appPrefs", { showExamples: state.showExamples });
+}
+function renderItemListBox(key){
+  var box = document.getElementById("itemmgr-"+key);
+  if(!box) return;
+  var list = state.itemLists[key] || [];
+  if(!list.length){ box.innerHTML = '<div class="empty-note" style="padding:8px 0;">등록된 항목이 없습니다</div>'; return; }
+  box.innerHTML = list.map(function(name, idx){
+    return '<div class="itemmgr-row" data-idx="'+idx+'">'
+      + '<input type="text" value="'+esc(name)+'" data-edit'+(itemMgrLocked?" readonly style=\"background:var(--card2,#f2f2ee); color:var(--muted);\"":"")+'>'
+      + (itemMgrLocked ? '' : '<button type="button" class="btn btn-x" data-del>✕</button>')
+      + '</div>';
+  }).join("");
+  box.querySelectorAll(".itemmgr-row").forEach(function(row){
+    var idx = Number(row.getAttribute("data-idx"));
+    row.querySelector("[data-edit]").addEventListener("change", async function(){
+      if(itemMgrLocked) return;
+      var v = this.value.trim();
+      if(!v){ this.value = state.itemLists[key][idx]; return; }
+      state.itemLists[key][idx] = v;
+      await saveItemLists();
+      showToast("수정했습니다");
+      populateQuickSelects();
+    });
+    var delBtn = row.querySelector("[data-del]");
+    if(delBtn) delBtn.addEventListener("click", async function(){
+      if(!confirm("["+state.itemLists[key][idx]+"] 항목을 삭제할까요?")) return;
+      state.itemLists[key].splice(idx,1);
+      await saveItemLists();
+      renderItemListBox(key);
+      populateQuickSelects();
+    });
+  });
+}
+function applyItemMgrLockUI(){
+  document.querySelectorAll(".itemmgr-add-row").forEach(function(row){ row.style.display = itemMgrLocked ? "none" : "flex"; });
+  var editBtn = document.getElementById("btn-itemmgr-edit");
+  var saveBtn = document.getElementById("btn-itemmgr-save");
+  if(editBtn && saveBtn){
+    editBtn.classList.toggle("btn-primary", !itemMgrLocked);
+    editBtn.classList.toggle("btn-dim", itemMgrLocked);
+    saveBtn.classList.toggle("btn-primary", itemMgrLocked);
+    saveBtn.classList.toggle("btn-dim", !itemMgrLocked);
+  }
+}
+function renderAllItemLists(){ ITEM_LIST_KEYS.forEach(renderItemListBox); applyItemMgrLockUI(); }
+var itemMgrEditBtn = document.getElementById("btn-itemmgr-edit");
+var itemMgrSaveBtn = document.getElementById("btn-itemmgr-save");
+if(itemMgrEditBtn) itemMgrEditBtn.addEventListener("click", function(){
+  if(!itemMgrLocked) return;
+  itemMgrLocked = false;
+  renderAllItemLists();
+  showToast("✏ 수정할 수 있습니다. 저장을 누르면 다시 잠깁니다");
+});
+if(itemMgrSaveBtn) itemMgrSaveBtn.addEventListener("click", function(){
+  if(itemMgrLocked) return;
+  itemMgrLocked = true;
+  renderAllItemLists();
+  showToast("🔒 항목 목록을 잠갔습니다");
+});
+document.querySelectorAll("[data-additem]").forEach(function(btn){
+  btn.addEventListener("click", async function(){
+    if(itemMgrLocked) return;
+    var key = btn.getAttribute("data-additem");
+    var input = document.getElementById("itemmgr-add-"+key);
+    var v = input.value.trim();
+    if(!v){ showToast("추가할 이름을 입력해주세요"); return; }
+    state.itemLists[key].push(v);
+    await saveItemLists();
+    input.value = "";
+    renderItemListBox(key);
+    populateQuickSelects();
+    showToast("추가했습니다");
+  });
+});
+document.getElementById("chk-show-examples").addEventListener("change", async function(){
+  state.showExamples = this.checked;
+  await saveAppPrefs();
+  applyExampleVisibility();
+  showToast(state.showExamples ? "예시 문구를 보여줍니다" : "예시 문구를 숨깁니다");
+});
+/* 입력칸 placeholder를 껐다 켰다 - 원래 예시 문구는 data-example 속성에 한 번만 저장해둠 */
+function applyExampleVisibility(){
+  document.querySelectorAll("[data-example]").forEach(function(el){
+    el.placeholder = state.showExamples !== false ? el.getAttribute("data-example") : "";
+  });
+}
+function markExamplePlaceholders(){
+  ["rep-equip-text","rep-vehicle-note","rep-mat-text","rep-today-work","rep-tomorrow-work","rep-memo","rep-instructions"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el && !el.getAttribute("data-example")){ el.setAttribute("data-example", el.placeholder); }
+  });
+}
+
+/* ============================================================
+   v15: 공사별 출역일지 사용 여부에 따라 화면 문구/탭 표시 전환
+============================================================ */
+function applyAttendanceModeUI(){
+  var proj = projectById(state.currentProjectId);
+  var enabled = proj ? (boolFlag(proj.attendanceEnabled,true)!==false) : true;
+  var tabBtn = document.getElementById("tab-attendance-btn");
+  var hintEl = document.getElementById("labor-section-hint");
+  var syncBtn = document.getElementById("btn-sync-attendance");
+  if(tabBtn) tabBtn.hidden = !enabled;
+  if(hintEl){ if(enabled) renderLaborSourceBadge(); else hintEl.textContent = "역할을 고르고 인원수만 입력하세요"; }
+  if(syncBtn) syncBtn.hidden = !enabled;
+  if(!enabled && tabBtn && tabBtn.classList.contains("active")){ switchMainTab("report"); }
 }
 /* v14: 백업 폴더 설정 UI - PC 크롬/엣지에서만 폴더 자동저장이 가능하므로, 미지원 브라우저(폰 등)에는
    그 사실을 안내하고 폴더 선택 버튼 자체를 숨긴다 */
@@ -2532,16 +2991,6 @@ document.getElementById("btn-clear-backup-folder").addEventListener("click", asy
   showToast("백업 폴더 설정을 해제했습니다");
   refreshBackupFolderUI();
 });
-document.getElementById("btn-save-contact").addEventListener("click", async function(){
-  var name = document.getElementById("contact-name").value.trim();
-  var phone = document.getElementById("contact-phone").value.trim();
-  if(!phone){ showToast("전화번호를 입력해주세요"); return; }
-  var contact = {id:"contact", name:name, phone:phone};
-  await state.storage.save("settings", "contact", contact);
-  state.contact = contact;
-  renderContactBar();
-  showToast("담당자 연락처를 저장했습니다");
-});
 document.getElementById("btn-factory-reset").addEventListener("click", async function(){
   if(!confirm("정말 전체 데이터를 초기화할까요? 계정, 공사, 작업일보가 모두 삭제되고 되돌릴 수 없습니다.")) return;
   for(var i=0;i<state.accounts.length;i++){ await state.storage.remove("accounts", state.accounts[i].id); }
@@ -2550,14 +2999,19 @@ document.getElementById("btn-factory-reset").addEventListener("click", async fun
   for(var rr=0;rr<state.attendanceRoster.length;rr++){ await state.storage.remove("attendanceRoster", state.attendanceRoster[rr].id); }
   for(var aa=0;aa<state.attendanceLogs.length;aa++){ await state.storage.remove("attendanceLogs", state.attendanceLogs[aa].id); }
   state.accounts = []; state.projects = []; state.logs = []; state.attendanceRoster = []; state.attendanceLogs = [];
-  // 로그인이 아예 안 되는 상황을 막기 위해 관리자 계정 하나(PIN 0000)만 새로 만들어둠
+  // 계정 정보 자체가 아예 없어지는 상황을 막기 위해 관리자 계정 하나만 새로 만들어둠(화면에는 안 보임)
   var freshAdmin = {id:uid(), name:"관리자", role:"admin", pin:"0000", projectIds:[], startDate:null, endDate:null, active:true};
   await state.storage.save("accounts", freshAdmin.id, freshAdmin);
   state.accounts.push(freshAdmin);
-  showToast("초기화했습니다. 관리자 PIN 0000으로 다시 로그인해서 실제 계정/공사를 등록해주세요.");
-  refreshSettingsTab();
+  showToast("초기화했습니다. 공사관리에서 공사를 새로 등록해주세요.");
+  state.currentProjectId = null;
   renderProjectSelect();
-  renderLoginScreen();
+  populateQuickSelects();
+  populateRosterRoleSelect();
+  applyAttendanceModeUI();
+  switchMainTab("settings");
+  var projTabBtn = document.querySelector('.tabbtn2[data-stab="projects"]');
+  if(projTabBtn) projTabBtn.click();
 });
 
 /* ============================================================
@@ -2630,8 +3084,8 @@ async function buildSampleLogs(pid, city, createdBy, approvedBy, startDate, prog
 
 async function seedIfEmpty(){
   if(state.accounts.length===0 && state.projects.length===0){
-    var proj1 = {id:"sample-proj1", name:"1소초 임시숙영시설 설치", company:"경도건설", city:"화천군", periodStart:"2026-08-01", periodEnd:"2026-11-30", active:true};
-    var proj2 = {id:"sample-proj2", name:"2소초 진지보강공사", company:"대한토건", city:"인제군", periodStart:"2026-08-15", periodEnd:"2026-12-15", active:true};
+    var proj1 = {id:"sample-proj1", name:"1소초 임시숙영시설 설치", company:"경도건설", city:"화천군", periodStart:"2026-08-01", periodEnd:"2026-11-30", active:true, attendanceEnabled:true, itemLists:defaultItemLists()};
+    var proj2 = {id:"sample-proj2", name:"2소초 진지보강공사", company:"대한토건", city:"인제군", periodStart:"2026-08-15", periodEnd:"2026-12-15", active:true, attendanceEnabled:true, itemLists:defaultItemLists()};
     await state.storage.save("projects", proj1.id, proj1);
     await state.storage.save("projects", proj2.id, proj2);
     state.projects.push(proj1, proj2);
@@ -2682,10 +3136,23 @@ async function seedIfEmpty(){
 function bootMain(){
   renderProjectSelect();
   populateQuickSelects();
-  loadReportForDate(todayStr());
+  populateRosterRoleSelect();
+  applyAttendanceModeUI();
+}
+
+/* v15: 불러온 값들이 진짜 boolean인지 정리(Apps Script를 거치면 문자열로 바뀌므로) */
+function normalizeLoadedFlags(){
+  state.projects.forEach(function(p){
+    p.active = boolFlag(p.active, true);
+    p.attendanceEnabled = boolFlag(p.attendanceEnabled, true);
+  });
+  state.accounts.forEach(function(a){ a.active = boolFlag(a.active, true); });
+  state.attendanceRoster.forEach(function(r){ r.active = boolFlag(r.active, true); });
 }
 
 async function boot(){
+  var loadingEl = document.getElementById("boot-loading");
+  loadingEl.hidden = false;
   var db = null;
   try{ if(window.claude && window.claude.use) db = await window.claude.use("db"); }catch(e){ db = null; }
   state.storage = db ? createDbAdapter(db) : (isAppsScriptConfigured() ? createAppsScriptAdapter() : (isSheetDBConfigured() ? createSheetDBAdapter() : createLocalAdapter()));
@@ -2708,29 +3175,34 @@ async function boot(){
   state.attendanceRoster = results[3];
   state.attendanceLogs = results[4];
   settingsRows = results[5] || [];
+  normalizeLoadedFlags();
   try{
     var contactRow = settingsRows.find(function(s){ return s.id==="contact"; });
     if(contactRow) state.contact = contactRow;
+    var prefsRow = settingsRows.find(function(s){ return s.id==="appPrefs"; });
+    if(prefsRow) state.showExamples = boolFlag(prefsRow.showExamples, true);
   }catch(e){}
   await seedIfEmpty();
 
-  if(location.hash === "#master"){ state.masterMode = true; }
-  renderLoginScreen();
+  markExamplePlaceholders();
+  applyExampleVisibility();
 
-  // 주소창에서 #master를 직접 지우거나 붙이는 경우(새로고침 없이)도 반영
-  window.addEventListener("hashchange", function(){
-    var wantMaster = location.hash === "#master";
-    if(wantMaster !== state.masterMode && !state.session){
-      state.masterMode = wantMaster;
-      renderLoginScreen();
-    }
-  });
+  /* v15.2: 겉장(공사 선택 화면) 없이, 마지막에 보던 공사·탭으로 바로 들어감 */
+  ensureAdminSession();
+  var lastView = loadLastView();
+  var knownTabs = ["report","attendance","kakao","dashboard","settings"];
+  var initialTab = (lastView && knownTabs.indexOf(lastView.tab)>=0) ? lastView.tab : "report";
+  state.currentProjectId = lastView ? lastView.projectId : null;
+  bootMain();
+  document.getElementById("screen-main").hidden = false;
+  switchMainTab(initialTab);
+  loadingEl.hidden = true;
 
   try{
-    state.storage.subscribe("accounts", function(arr){ state.accounts = arr; if(!state.session) renderLoginScreen(); });
-    state.storage.subscribe("projects", function(arr){ state.projects = arr; });
+    state.storage.subscribe("accounts", function(arr){ state.accounts = arr; normalizeLoadedFlags(); });
+    state.storage.subscribe("projects", function(arr){ state.projects = arr; normalizeLoadedFlags(); renderProjectSelect(); });
     state.storage.subscribe("logs", function(arr){ state.logs = arr; });
-    state.storage.subscribe("attendanceRoster", function(arr){ state.attendanceRoster = arr; });
+    state.storage.subscribe("attendanceRoster", function(arr){ state.attendanceRoster = arr; normalizeLoadedFlags(); });
     state.storage.subscribe("attendanceLogs", function(arr){ state.attendanceLogs = arr; });
   }catch(e){}
 }
